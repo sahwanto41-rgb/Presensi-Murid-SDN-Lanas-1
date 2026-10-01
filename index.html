@@ -180,13 +180,13 @@ window.QRCode = (function(){
 </style>
 </head>
 <body>
-<script id="__seedScript">window.__SEED__={"students":[{"id":"3199929298","nama":"Aida Halfis","kelas":"1"}],"presensi":[{"id":"3199929298","nama":"Aida Halfis","kelas":"1","dateKey":"2026-09-26","time":"-","status":"I","ket":""}]};</script>
+<script id="__seedScript">window.__SEED__={"students":[],"presensi":[]};</script>
 
 <header>
   <p class="brand"><span class="logo">📋</span> Presensi Siswa</p>
   <p class="sub" id="todayLabel">Sabtu, 26 September 2026</p>
 </header>
-<div class="card" style="margin:8px 12px"><label class="lbl">Presensi untuk</label><select id="mapelSel"><option value="HARIAN">Harian (Guru Kelas)</option><option value="PAIPB">PAIPB (per pertemuan)</option><option value="PJOK">PJOK (per pertemuan)</option></select></div>
+<div class="card" style="margin:8px 12px"><label class="lbl">Presensi untuk</label><select id="mapelSel"><option value="HARIAN">Harian (Guru Kelas)</option><option value="PAIPB">PAIPB (per pertemuan)</option><option value="PJOK">PJOK (per pertemuan)</option></select><label class="lbl" style="margin-top:10px">Dicatat oleh (isi bila menggantikan guru kelas)</label><input id="petugas" placeholder="Nama guru yang melakukan presensi" autocomplete="off"></div>
 <div class="flash" id="flash"></div>
 <nav>
   <button class="tab" data-view="scan">📷 Scan</button>
@@ -216,7 +216,7 @@ window.QRCode = (function(){
   <section class="view active" id="view-siswa">
     <div class="card">
       <h3 style="margin:0 0 6px">Simpan ke Google Sheets</h3>
-      <p class="sub" style="margin-bottom:10px">Setiap presensi yang dicatat otomatis dikirim ke Google Sheets Anda. Tempel alamat Web App dari Apps Script (berakhiran <b>/exec</b>).</p>
+      <p class="sub" style="margin-bottom:10px">Google Sheets menjadi data bersama semua guru: presensi dikirim otomatis, dan daftar siswa serta presensi dari perangkat lain diambil otomatis. Tempel alamat Web App dari Apps Script (berakhiran <b>/exec</b>) di setiap perangkat.</p>
       <div class="row">
         <input id="shUrl" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off">
         <input id="shToken" placeholder="Kode rahasia (sama dengan di Apps Script)" autocomplete="off">
@@ -225,6 +225,7 @@ window.QRCode = (function(){
         <button class="btn" id="shSaveBtn">Simpan Pengaturan</button>
         <button class="btn ghost" id="shTestBtn">Tes Koneksi</button>
         <button class="btn ghost" id="shSyncAllBtn">Kirim Semua Data</button>
+        <button class="btn ghost" id="shPullBtn">Ambil Data dari Sheets</button>
       </div>
       <p class="hint" id="shStatus">Belum tersambung.</p>
     </div>
@@ -257,7 +258,7 @@ window.QRCode = (function(){
       <h3 style="margin:0 0 8px">Daftar &amp; Kode Barcode</h3>
       <p class="sub" style="margin-bottom:10px">Unduh kode QR tiap siswa sebagai gambar PNG untuk ditempel di kartu, lalu di-scan saat absen.</p>
       <p class="flash" id="qrLibWarning" style="display: none;">Pustaka barcode gagal dimuat. Periksa koneksi internet lalu muat ulang halaman ini.</p>
-      <div id="studentList"><div class="qrbox"><div style="flex:1"><strong>Aida Halfis</strong><br><span class="sub">3199929298 · 1</span></div><canvas width="69" height="69"></canvas><div class="btnRow"><button class="btn ghost sm" title="Unduh barcode PNG">PNG</button><button class="btn ghost sm">Hapus</button></div></div></div>
+      <div id="studentList"></div><canvas width="69" height="69"></canvas><div class="btnRow"><button class="btn ghost sm" title="Unduh barcode PNG">PNG</button><button class="btn ghost sm">Hapus</button></div></div></div>
       <p class="empty" id="studentEmpty" style="display: none;">Belum ada siswa. Tambahkan di atas.</p>
       <button class="btn ghost" id="printCardsBtn" style="margin-top:10px">🖼️ Unduh Semua Barcode (PNG)</button>
     </div>
@@ -313,27 +314,15 @@ window.QRCode = (function(){
       </div>
       <table style="margin-top:12px">
         <thead><tr><th>Tanggal</th><th>Waktu</th><th>Nama</th><th>Kelas</th><th>Status</th><th>Keterangan</th></tr></thead>
-        <tbody id="historyBody"><tr><td>2026-09-26</td><td>-</td><td>Aida Halfis</td><td>1</td><td><span class="pill I">Ijin</span></td><td></td></tr></tbody>
-        <tfoot id="historyFoot"><tr><td colspan="4">Rekapitulasi</td><td colspan="2">Hadir: 0 &nbsp; Ijin: 1 &nbsp; Sakit: 0 &nbsp; Alpa: 0</td></tr></tfoot>
+        <tbody id="historyBody"></tbody>
+        <tfoot id="historyFoot"></tfoot>
       </table>
       <p class="empty" id="historyEmpty" style="display: none;">Belum ada riwayat.</p>
     </div>
     <div class="card">
       <h3 style="margin:0 0 8px">Ringkasan Kehadiran</h3>
       <p class="sub" id="riwayatPct" style="margin:0 0 12px">Persentase kehadiran: 0.0% (dari 1 entri)</p>
-      <div id="riwayatChart"><svg viewBox="0 0 336 128" width="100%" style="max-width:360px; color:inherit; display:block"><text x="0" y="14.96" font-size="12" fill="currentColor">Hadir</text>
-        <rect x="46" y="0" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="0" width="0" height="22" rx="4" fill="#2F6F62"></rect>
-        <text x="274" y="14.96" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="46.96" font-size="12" fill="currentColor">Ijin</text>
-        <rect x="46" y="32" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="32" width="220" height="22" rx="4" fill="#E3A73B"></rect>
-        <text x="274" y="46.96" font-size="12" fill="currentColor">1 (100%)</text><text x="0" y="78.96000000000001" font-size="12" fill="currentColor">Sakit</text>
-        <rect x="46" y="64" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="64" width="0" height="22" rx="4" fill="#4C7EA8"></rect>
-        <text x="274" y="78.96000000000001" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="110.96000000000001" font-size="12" fill="currentColor">Alpa</text>
-        <rect x="46" y="96" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="96" width="0" height="22" rx="4" fill="#C1533C"></rect>
-        <text x="274" y="110.96000000000001" font-size="12" fill="currentColor">0 (0%)</text></svg></div>
+      <div id="riwayatChart"></div>
     </div>
   </section>
 
@@ -405,19 +394,7 @@ window.QRCode = (function(){
     <div class="card" id="rekapPreview" style="display: block;">
       <h3 style="margin:0 0 8px">Ringkasan Kelas</h3>
       <p class="sub" id="rekapPct" style="margin:0 0 12px">Persentase kehadiran kelas: 0.0% (dari 1 entri tercatat)</p>
-      <div id="rekapChart"><svg viewBox="0 0 336 128" width="100%" style="max-width:360px; color:inherit; display:block"><text x="0" y="14.96" font-size="12" fill="currentColor">Hadir</text>
-        <rect x="46" y="0" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="0" width="0" height="22" rx="4" fill="#2F6F62"></rect>
-        <text x="274" y="14.96" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="46.96" font-size="12" fill="currentColor">Ijin</text>
-        <rect x="46" y="32" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="32" width="220" height="22" rx="4" fill="#E3A73B"></rect>
-        <text x="274" y="46.96" font-size="12" fill="currentColor">1 (100%)</text><text x="0" y="78.96000000000001" font-size="12" fill="currentColor">Sakit</text>
-        <rect x="46" y="64" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="64" width="0" height="22" rx="4" fill="#4C7EA8"></rect>
-        <text x="274" y="78.96000000000001" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="110.96000000000001" font-size="12" fill="currentColor">Alpa</text>
-        <rect x="46" y="96" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="96" width="0" height="22" rx="4" fill="#C1533C"></rect>
-        <text x="274" y="110.96000000000001" font-size="12" fill="currentColor">0 (0%)</text></svg></div>
+      <div id="rekapChart"></div>
     </div>
   </section>
 
@@ -440,23 +417,11 @@ window.QRCode = (function(){
   </div>
   <table id="rkTable">
     <thead><tr id="rkHeadRow"><th class="no">No</th><th class="name">Nama Siswa</th><th class="day">1</th><th class="day">2</th><th class="day">3</th><th class="day">4</th><th class="day">5</th><th class="day">6</th><th class="day">7</th><th class="day">8</th><th class="day">9</th><th class="day">10</th><th class="day">11</th><th class="day">12</th><th class="day">13</th><th class="day">14</th><th class="day">15</th><th class="day">16</th><th class="day">17</th><th class="day">18</th><th class="day">19</th><th class="day">20</th><th class="day">21</th><th class="day">22</th><th class="day">23</th><th class="day">24</th><th class="day">25</th><th class="day">26</th><th class="day">27</th><th class="day">28</th><th class="day">29</th><th class="day">30</th><th class="tot">H</th><th class="tot">I</th><th class="tot">S</th><th class="tot">A</th><th class="tot">%H</th></tr></thead>
-    <tbody id="rkBody"><tr><td class="no">1</td><td class="name">Aida Halfis</td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day">I</td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="tot">0</td><td class="tot">1</td><td class="tot">0</td><td class="tot">0</td><td class="tot">0.0%</td></tr></tbody>
-    <tfoot id="rkFoot"><tr><td class="no"></td><td class="name">Jumlah hadir/hari</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="tot">0</td><td class="tot">1</td><td class="tot">0</td><td class="tot">0</td><td class="tot">0.0%</td></tr></tfoot>
+    <tbody id="rkBody"></tbody>
+    <tfoot id="rkFoot"></tfoot>
   </table>
   <p id="rkPctPrint" style="margin-top:14px; font-size:.85rem; font-weight:700">Persentase kehadiran kelas: 0.0% (dari 1 entri tercatat)</p>
-  <div id="rkChartPrint" style="margin-top:6px"><svg viewBox="0 0 336 128" width="100%" style="max-width:360px; color:inherit; display:block"><text x="0" y="14.96" font-size="12" fill="currentColor">Hadir</text>
-        <rect x="46" y="0" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="0" width="0" height="22" rx="4" fill="#2F6F62"></rect>
-        <text x="274" y="14.96" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="46.96" font-size="12" fill="currentColor">Ijin</text>
-        <rect x="46" y="32" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="32" width="220" height="22" rx="4" fill="#E3A73B"></rect>
-        <text x="274" y="46.96" font-size="12" fill="currentColor">1 (100%)</text><text x="0" y="78.96000000000001" font-size="12" fill="currentColor">Sakit</text>
-        <rect x="46" y="64" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="64" width="0" height="22" rx="4" fill="#4C7EA8"></rect>
-        <text x="274" y="78.96000000000001" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="110.96000000000001" font-size="12" fill="currentColor">Alpa</text>
-        <rect x="46" y="96" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
-        <rect x="46" y="96" width="0" height="22" rx="4" fill="#C1533C"></rect>
-        <text x="274" y="110.96000000000001" font-size="12" fill="currentColor">0 (0%)</text></svg></div>
+  <div id="rkChartPrint" style="margin-top:6px"></div>
   <div class="sig">
     <div class="block">
       <p>Mengetahui,<br>Kepala Sekolah</p>
@@ -478,7 +443,7 @@ window.QRCode = (function(){
 (function(){
   const $ = s => document.querySelector(s);
   const todayStr = () => new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const dateKey = d => d.toISOString().slice(0,10);
+  const dateKey = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   const STATUS_LABEL = {H:'Hadir', I:'Ijin', S:'Sakit', A:'Alpa'};
   const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   $('#todayLabel').textContent = todayStr();
@@ -583,18 +548,22 @@ window.QRCode = (function(){
     }, ()=>{});
   }
 
-  // ---- Sinkronisasi ke Google Sheets (lewat Google Apps Script Web App) ----
-  // Data tetap disimpan lokal dulu. Pengiriman ke Sheets bersifat "idempoten"
-  // (menimpa baris tanggal+mapel yang sama), jadi aman dikirim ulang. Kalau HP
-  // sedang offline, antrean disimpan dan dikirim otomatis saat koneksi kembali.
-  const SHEETS_CFG_KEY = 'presensi_sheets_cfg', SHEETS_PENDING_KEY = 'presensi_sheets_pending';
+  // ---- Sinkronisasi dua arah dengan Google Sheets (Google Apps Script Web App) ----
+  // Google Sheets menjadi data bersama semua perangkat/guru. Perubahan lokal
+  // dikirim per siswa (digabung, bukan ditimpa), dan data dari perangkat lain
+  // diambil lewat "pull". Antrean disimpan bila offline dan dikirim ulang.
+  const SHEETS_CFG_KEY = 'presensi_sheets_cfg', SHEETS_PENDING_KEY = 'presensi_sheets_pending', SHEETS_INITIAL_KEY = 'presensi_sheets_initial';
   function sheetsCfg(){ try{ return JSON.parse(localStorage.getItem(SHEETS_CFG_KEY)||'{}')||{}; }catch(e){ return {}; } }
   function sheetsPending(){
-    try{ const p = JSON.parse(localStorage.getItem(SHEETS_PENDING_KEY)||'null'); return {students:!!(p&&p.students), days:(p&&p.days)||[]}; }
-    catch(e){ return {students:false, days:[]}; }
+    try{
+      const p = JSON.parse(localStorage.getItem(SHEETS_PENDING_KEY)||'null')||{};
+      return {students:!!p.students, days:p.days||[], delStudents:p.delStudents||[], delRecs:p.delRecs||[]};
+    }catch(e){ return {students:false, days:[], delStudents:[], delRecs:[]}; }
   }
   function setPending(p){ try{ localStorage.setItem(SHEETS_PENDING_KEY, JSON.stringify(p)); }catch(e){} }
+  function hasPending(){ const p = sheetsPending(); return p.students || p.days.length || p.delStudents.length || p.delRecs.length; }
   function setShStatus(msg){ const el = $('#shStatus'); if(el) el.textContent = msg; }
+  function curPetugas(){ const el = $('#petugas'); return el ? el.value.trim() : ''; }
 
   async function sheetsPost(payload){
     const cfg = sheetsCfg();
@@ -606,10 +575,19 @@ window.QRCode = (function(){
       const j = await r.json();
       return {ok: !!j.ok, msg: j.error||''};
     }catch(e){
-      // Respons tidak terbaca (CORS) atau offline. Coba sekali lagi tanpa membaca respons.
       try{ await fetch(cfg.url, {method:'POST', mode:'no-cors', headers, body}); return {ok:true, opaque:true}; }
       catch(e2){ return {ok:false, msg:'offline'}; }
     }
+  }
+  async function sheetsGet(params){
+    const cfg = sheetsCfg();
+    if(!cfg.url) return {ok:false, msg:'Alamat Web App belum diisi'};
+    const qs = new URLSearchParams({...params, token: cfg.token||''});
+    try{
+      const r = await fetch(cfg.url+'?'+qs.toString());
+      const j = await r.json();
+      return j.ok ? {ok:true, data:j} : {ok:false, msg:j.error||'gagal'};
+    }catch(e){ return {ok:false, msg:'offline'}; }
   }
 
   let sheetsFlushing = false, sheetsAgain = false;
@@ -626,15 +604,25 @@ window.QRCode = (function(){
           if(!res.ok){ sheetsFail(res); return; }
           const q = sheetsPending(); q.students = false; setPending(q);
         }
+        for(const id of [...sheetsPending().delStudents]){
+          const res = await sheetsPost({action:'deleteStudent', id});
+          if(!res.ok){ sheetsFail(res); return; }
+          const q = sheetsPending(); q.delStudents = q.delStudents.filter(x=>x!==id); setPending(q);
+        }
         for(const key of [...sheetsPending().days]){
           const sep = key.indexOf('|'), dk = key.slice(0,sep), mapel = key.slice(sep+1);
           const records = (presensiByDate[dk]||[]).filter(r=>(r.mapel||'HARIAN')===mapel)
-            .map(r=>({id:r.id, nama:r.nama, kelas:r.kelas||'', time:r.time||'-', status:r.status, ket:r.ket||''}));
+            .map(r=>({id:r.id, nama:r.nama, kelas:r.kelas||'', time:r.time||'-', status:r.status, ket:r.ket||'', oleh:r.oleh||''}));
           sheetsRedirtied.delete(key);
           const res = await sheetsPost({action:'syncDay', dateKey:dk, mapel, records});
           if(!res.ok){ sheetsFail(res); return; }
           if(!sheetsRedirtied.has(key)){ const q = sheetsPending(); q.days = q.days.filter(k=>k!==key); setPending(q); }
           else sheetsAgain = true;
+        }
+        for(const d of [...sheetsPending().delRecs]){
+          const res = await sheetsPost({action:'deleteRecord', dateKey:d.dk, mapel:d.mapel, id:d.id});
+          if(!res.ok){ sheetsFail(res); return; }
+          const q = sheetsPending(); q.delRecs = q.delRecs.filter(x=>!(x.dk===d.dk && x.mapel===d.mapel && x.id===d.id)); setPending(q);
         }
       }while(sheetsAgain);
       setShStatus('Terkirim ke Google Sheets pukul '+new Date().toLocaleTimeString('id-ID')+' ✔');
@@ -651,9 +639,19 @@ window.QRCode = (function(){
     if(sheetsFlushing) sheetsRedirtied.add(key);
     sheetsFlush();
   }
+  function sheetsDeleteRecord(dk, mapel, id){
+    if(!sheetsCfg().url) return;
+    const p = sheetsPending(); p.delRecs.push({dk, mapel, id}); setPending(p);
+    sheetsFlush();
+  }
   function sheetsSyncStudents(){
     if(!sheetsCfg().url) return;
     const p = sheetsPending(); p.students = true; setPending(p);
+    sheetsFlush();
+  }
+  function sheetsDeleteStudent(id){
+    if(!sheetsCfg().url) return;
+    const p = sheetsPending(); if(!p.delStudents.includes(id)) p.delStudents.push(id); setPending(p);
     sheetsFlush();
   }
   function sheetsQueueAll(){
@@ -666,6 +664,73 @@ window.QRCode = (function(){
     return sheetsFlush();
   }
 
+  // Ambil daftar siswa & presensi dari Sheets (ditulis perangkat/guru lain) lalu gabungkan.
+  let sheetsPullPromise = null;
+  function sheetsPull(){
+    if(!sheetsCfg().url) return Promise.resolve({ok:false, msg:'Alamat Web App belum diisi'});
+    if(sheetsPullPromise) return sheetsPullPromise;
+    sheetsPullPromise = doSheetsPull().finally(()=>{ sheetsPullPromise = null; });
+    return sheetsPullPromise;
+  }
+  async function doSheetsPull(){
+    const rs = await sheetsGet({action:'students'});
+    if(!rs.ok) return rs;
+    const from = dateKey(new Date(Date.now()-120*86400000));
+    const rp = await sheetsGet({action:'presensi', from});
+    if(!rp.ok) return rp;
+    const p = sheetsPending();
+    let changed = false;
+    (rs.data.students||[]).forEach(x=>{
+      const id = String(x.id).trim();
+      if(!id || p.delStudents.includes(id)) return;
+      const cur = students.find(t=>t.id===id);
+      if(!cur){ students.push({id, nama:x.nama||'', kelas:x.kelas||''}); changed = true; }
+      else if(!p.students && (cur.nama!==(x.nama||cur.nama) || (cur.kelas||'')!==(x.kelas||''))){
+        cur.nama = x.nama||cur.nama; cur.kelas = x.kelas||''; changed = true;
+      }
+    });
+    const pendingDays = new Set(p.days);
+    const delSet = new Set(p.delRecs.map(d=>d.dk+'|'+d.mapel+'|'+d.id));
+    (rp.data.records||[]).forEach(r=>{
+      const dk = r.dateKey, mapel = r.mapel||'HARIAN', id = String(r.id);
+      if(pendingDays.has(dk+'|'+mapel) || delSet.has(dk+'|'+mapel+'|'+id)) return;
+      const list = presensiByDate[dk] = presensiByDate[dk]||[];
+      const cur = list.find(t=>t.id===id && mp(t)===mapel);
+      const nv = {id, mapel, nama:r.nama||'', kelas:r.kelas||'', time:r.time||'-', status:r.status, ket:r.ket||'', oleh:r.oleh||''};
+      if(!cur){ list.push(nv); changed = true; }
+      else ['nama','kelas','time','status','ket','oleh'].forEach(k=>{ if((cur[k]||'')!==(nv[k]||'')){ cur[k] = nv[k]; changed = true; } });
+    });
+    if(changed){
+      rebuildPresensiFromByDate(); save();
+      renderStudents(); renderToday(); renderHistory();
+      if($('#view-catatan').classList.contains('active')){ renderCatatanForm(); renderCatatan(); }
+      if($('#view-rekap').classList.contains('active')) renderRekapForm();
+    }
+    return {ok:true, changed};
+  }
+  async function sheetsSync(manual){
+    const url = sheetsCfg().url;
+    if(!url) return;
+    // Pertama kali tersambung ke alamat ini: kirim otomatis semua siswa & presensi
+    // yang sudah ada di perangkat ini (sekali saja, aman diulang bila gagal).
+    let initial = ''; try{ initial = localStorage.getItem(SHEETS_INITIAL_KEY)||''; }catch(e){}
+    const firstTime = initial !== url;
+    const hadData = students.length > 0 || presensi.length > 0;
+    if(firstTime && hadData){ setShStatus('Mengirim data yang sudah ada ke Google Sheets…'); await sheetsQueueAll(); }
+    else await sheetsFlush();
+    if(firstTime && !hasPending()){
+      try{ localStorage.setItem(SHEETS_INITIAL_KEY, url); }catch(e){}
+      if(hadData) flash('Data yang sudah ada di perangkat ini terkirim ke Google Sheets ✔', 'ok');
+    }
+    const r = await sheetsPull();
+    if(r.ok){ setShStatus('Tersinkron dengan Google Sheets pukul '+new Date().toLocaleTimeString('id-ID')+' ✔'); if(manual) flash(r.changed?'Data terbaru dari Google Sheets dimuat.':'Data sudah yang terbaru.', 'ok'); }
+    else{
+      setShStatus('Gagal mengambil data ('+(r.msg||'gagal')+').');
+      if(manual && r.msg!=='offline') flash('Google Sheets: '+r.msg, 'err');
+      else if(manual) flash('Tidak ada koneksi internet.', 'warn');
+    }
+  }
+
   function upsert(id, dateKey, status, ket){
     const student = students.find(s=>s.id===id);
     if(!student) return null;
@@ -673,10 +738,10 @@ window.QRCode = (function(){
     let rec = dayRecords.find(r=>r.id===id && mp(r)===curMapel);
     const time = new Date().toLocaleTimeString('id-ID');
     if(rec){
-      rec.status = status; rec.ket = ket||''; rec.nama = student.nama; rec.kelas = student.kelas;
+      rec.status = status; rec.ket = ket||''; rec.nama = student.nama; rec.kelas = student.kelas; rec.oleh = curPetugas();
       if(status==='H') rec.time = time;
     } else {
-      rec = {id, mapel:curMapel, nama:student.nama, kelas:student.kelas, time: status==='H'?time:'-', status, ket:ket||''};
+      rec = {id, mapel:curMapel, nama:student.nama, kelas:student.kelas, time: status==='H'?time:'-', status, ket:ket||'', oleh:curPetugas()};
       dayRecords.push(rec);
     }
     presensiByDate[dateKey] = dayRecords;
@@ -798,7 +863,7 @@ window.QRCode = (function(){
         const dkDel = b.dataset.date;
         presensiByDate[dkDel] = (presensiByDate[dkDel]||[]).filter(r=>!(r.id===b.dataset.id && r.status!=='H' && mp(r)===curMapel));
         dbSavePresensiDay(dkDel, presensiByDate[dkDel]);
-        sheetsQueueDay(dkDel, curMapel);
+        sheetsDeleteRecord(dkDel, curMapel, b.dataset.id);
         save(); renderCatatan(); renderHistory();
       });
     });
@@ -833,7 +898,7 @@ window.QRCode = (function(){
       del.addEventListener('click', ()=>{
         students = students.filter(x=>x.id!==s.id); save(); renderStudents();
         dbDeleteStudent(s.id);
-        sheetsSyncStudents();
+        sheetsDeleteStudent(s.id);
       });
       btnRow.appendChild(del);
       div.appendChild(btnRow);
@@ -1132,10 +1197,18 @@ window.QRCode = (function(){
 
   // Scanner
   let scanner = null;
-  function onScanSuccess(text){
+  let scanLoading = false;
+  async function onScanSuccess(text){
     const key = dateKey(new Date());
     const id = text.trim();
-    const student = students.find(s=>s.id===id);
+    let student = students.find(s=>s.id===id);
+    if(!student && sheetsCfg().url){
+      if(scanLoading) return;
+      scanLoading = true;
+      try{ flash('Memuat data siswa dari Google Sheets…', 'warn'); await sheetsPull(); }
+      finally{ scanLoading = false; }
+      student = students.find(s=>s.id===id);
+    }
     if(!student){ flash('ID tidak dikenali: '+id, 'err'); return; }
     const existing = presensi.find(r=>r.id===id && r.dateKey===key && mp(r)===curMapel);
     if(existing){ flash(student.nama+' sudah tercatat hari ini ('+STATUS_LABEL[existing.status]+').', 'warn'); return; }
@@ -1643,8 +1716,9 @@ window.QRCode = (function(){
       const url = $('#shUrl').value.trim();
       if(url && !/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)){ flash('Alamat harus dari Apps Script dan berakhiran /exec.', 'err'); return; }
       try{ localStorage.setItem(SHEETS_CFG_KEY, JSON.stringify({url, token:$('#shToken').value.trim()})); }catch(e){}
-      setShStatus(url ? 'Tersimpan. Tekan "Tes Koneksi", lalu "Kirim Semua Data" untuk mengirim data yang sudah ada.' : 'Belum tersambung.');
+      setShStatus(url ? 'Tersimpan. Menyambungkan dan mengirim data yang sudah ada…' : 'Belum tersambung.');
       flash(url ? 'Pengaturan Google Sheets tersimpan.' : 'Sinkronisasi Google Sheets dimatikan.', 'ok');
+      if(url) sheetsSync(false);
     });
     $('#shTestBtn').addEventListener('click', async ()=>{
       if(!sheetsCfg().url){ flash('Simpan alamat Web App terlebih dahulu.', 'warn'); return; }
@@ -1659,9 +1733,18 @@ window.QRCode = (function(){
       setShStatus('Mengirim semua data…');
       await sheetsQueueAll();
     });
-    window.addEventListener('online', ()=> sheetsFlush());
-    setInterval(()=>{ const p = sheetsPending(); if(sheetsCfg().url && (p.students || p.days.length)) sheetsFlush(); }, 120000);
-    sheetsFlush();
+    $('#shPullBtn').addEventListener('click', ()=>{
+      if(!sheetsCfg().url){ flash('Simpan alamat Web App terlebih dahulu.', 'warn'); return; }
+      setShStatus('Mengambil data dari Google Sheets…');
+      sheetsSync(true);
+    });
+    const pet = $('#petugas');
+    try{ pet.value = localStorage.getItem('presensi_petugas')||''; }catch(e){}
+    pet.addEventListener('input', ()=>{ try{ localStorage.setItem('presensi_petugas', pet.value); }catch(e){} });
+    $('#startBtn').addEventListener('click', ()=> sheetsSync(false));
+    window.addEventListener('online', ()=> sheetsSync(false));
+    setInterval(()=> sheetsSync(false), 120000);
+    sheetsSync(false);
   })();
 
 })();
