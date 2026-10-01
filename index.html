@@ -226,6 +226,7 @@ window.QRCode = (function(){
         <button class="btn ghost" id="shTestBtn">Tes Koneksi</button>
         <button class="btn ghost" id="shSyncAllBtn">Kirim Semua Data</button>
         <button class="btn ghost" id="shPullBtn">Ambil Data dari Sheets</button>
+        <button class="btn ghost" id="shLinkBtn">Salin Tautan Setup</button>
       </div>
       <p class="hint" id="shStatus">Belum tersambung.</p>
     </div>
@@ -553,7 +554,17 @@ window.QRCode = (function(){
   // dikirim per siswa (digabung, bukan ditimpa), dan data dari perangkat lain
   // diambil lewat "pull". Antrean disimpan bila offline dan dikirim ulang.
   const SHEETS_CFG_KEY = 'presensi_sheets_cfg', SHEETS_PENDING_KEY = 'presensi_sheets_pending', SHEETS_INITIAL_KEY = 'presensi_sheets_initial';
-  function sheetsCfg(){ try{ return JSON.parse(localStorage.getItem(SHEETS_CFG_KEY)||'{}')||{}; }catch(e){ return {}; } }
+  // Pengaturan bawaan: berlaku di semua perangkat tanpa perlu diisi ulang.
+  // Isian manual di kartu "Simpan ke Google Sheets" tetap diutamakan bila ada.
+  const SHEETS_DEFAULT = {
+    url: 'https://script.google.com/macros/s/AKfycby_WHJ_O-HMkEukdXpOofadRd_Ghr1xqKKm0F7bYXw41A6aDW6pK4qmWqYaiJdiaPkq9w/exec',
+    token: 'Lanas01@2023'
+  };
+  function sheetsCfg(){
+    let c = {};
+    try{ c = JSON.parse(localStorage.getItem(SHEETS_CFG_KEY)||'{}')||{}; }catch(e){}
+    return (c.url || c.off) ? c : SHEETS_DEFAULT;
+  }
   function sheetsPending(){
     try{
       const p = JSON.parse(localStorage.getItem(SHEETS_PENDING_KEY)||'null')||{};
@@ -1709,13 +1720,30 @@ window.QRCode = (function(){
   renderToday(); renderHistory(); renderStudents();
   initDb();
   (function initSheetsUi(){
+    // Cek apakah browser benar-benar bisa menyimpan data (gagal di mode penyamaran / browser dalam aplikasi).
+    let storageOk = true;
+    try{ localStorage.setItem('presensi_test','1'); localStorage.removeItem('presensi_test'); }catch(e){ storageOk = false; }
+    try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+    // Tautan setup: #setup=... otomatis memasang URL & kode rahasia di perangkat ini.
+    const hm = (location.hash||'').match(/^#setup=(.+)$/);
+    if(hm){
+      try{
+        const o = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(hm[1])))));
+        if(o && /^https:\/\/script\.google\.com\/.+\/exec$/.test(o.u||'')){
+          localStorage.setItem(SHEETS_CFG_KEY, JSON.stringify({url:o.u, token:o.t||''}));
+          flash('Pengaturan Google Sheets terpasang dari tautan setup ✔', 'ok');
+        }
+      }catch(e){}
+      try{ history.replaceState(null, '', location.pathname+location.search); }catch(e){}
+    }
     const cfg = sheetsCfg();
     $('#shUrl').value = cfg.url||''; $('#shToken').value = cfg.token||'';
     if(cfg.url) setShStatus('Tersambung ke Google Sheets.');
+    if(!storageOk) setShStatus('⚠ Browser ini tidak menyimpan data (mode penyamaran atau browser dalam aplikasi). Buka lewat Chrome/Safari biasa.');
     $('#shSaveBtn').addEventListener('click', ()=>{
       const url = $('#shUrl').value.trim();
       if(url && !/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)){ flash('Alamat harus dari Apps Script dan berakhiran /exec.', 'err'); return; }
-      try{ localStorage.setItem(SHEETS_CFG_KEY, JSON.stringify({url, token:$('#shToken').value.trim()})); }catch(e){}
+      try{ localStorage.setItem(SHEETS_CFG_KEY, JSON.stringify({url, token:$('#shToken').value.trim(), off:!url})); }catch(e){}
       setShStatus(url ? 'Tersimpan. Menyambungkan dan mengirim data yang sudah ada…' : 'Belum tersambung.');
       flash(url ? 'Pengaturan Google Sheets tersimpan.' : 'Sinkronisasi Google Sheets dimatikan.', 'ok');
       if(url) sheetsSync(false);
@@ -1732,6 +1760,13 @@ window.QRCode = (function(){
       if(!sheetsCfg().url){ flash('Simpan alamat Web App terlebih dahulu.', 'warn'); return; }
       setShStatus('Mengirim semua data…');
       await sheetsQueueAll();
+    });
+    $('#shLinkBtn').addEventListener('click', async ()=>{
+      const c = sheetsCfg();
+      if(!c.url){ flash('Simpan alamat Web App terlebih dahulu.', 'warn'); return; }
+      const link = location.origin+location.pathname+'#setup='+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({u:c.url, t:c.token||''})))));
+      try{ await navigator.clipboard.writeText(link); flash('Tautan setup tersalin. Kirim hanya ke guru yang berwenang.', 'ok'); }
+      catch(e){ window.prompt('Salin tautan setup ini (jangan dibagikan sembarangan):', link); }
     });
     $('#shPullBtn').addEventListener('click', ()=>{
       if(!sheetsCfg().url){ flash('Simpan alamat Web App terlebih dahulu.', 'warn'); return; }
