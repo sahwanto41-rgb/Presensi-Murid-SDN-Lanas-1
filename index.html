@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Presensi Siswa — Scan Barcode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';"></script>
+<!-- Pustaka pembuat kode QR/barcode disematkan langsung (tidak lewat CDN) supaya fitur barcode selalu tersedia walau tanpa akses ke luar. Sumber: qrcode-generator oleh Kazuhiko Arase (MIT License). -->
+<script>
+var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())},f.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<f.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<f.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=f.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},f.createSvgTag=function(t,r,e,n){var o={};"object"==typeof arguments[0]&&(t=(o=arguments[0]).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,c,g=f.getModuleCount()*t+2*r,l="";for(c="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",l+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',l+=o.scalable?"":' width="'+g+'px" height="'+g+'px"',l+=' viewBox="0 0 '+g+" "+g+'" ',l+=' preserveAspectRatio="xMinYMin meet"',l+=n.text||e.text?' role="img" aria-labelledby="'+y([n.id,e.id].join(" ").trim())+'"':"",l+=">",l+=n.text?'<title id="'+y(n.id)+'">'+y(n.text)+"</title>":"",l+=e.text?'<description id="'+y(e.id)+'">'+y(e.text)+"</description>":"",l+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',l+='<path d="',a=0;a<f.getModuleCount();a+=1)for(u=a*t+r,i=0;i<f.getModuleCount();i+=1)f.isDark(a,i)&&(l+="M"+(i*t+r)+","+u+c);return l+='" stroke="transparent" fill="black"/>',l+="</svg>"},f.createDataURL=function(t,r){t=t||2,r=void 0===r?4*t:r;var e=f.getModuleCount()*t+2*r,n=r,o=e-r;return I(e,e,function(r,e){if(n<=r&&r<o&&n<=e&&e<o){var i=Math.floor((r-n)/t),a=Math.floor((e-n)/t);return f.isDark(a,i)?0:1}return 1})},f.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=f.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=f.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=y(e),o+='"'),o+="/>"};var y=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return f.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*f.getModuleCount()+2*t,u=t,c=a-t,g={"██":"█","█ ":"▀"," █":"▄","  ":" "},l={"██":"▀","█ ":"▀"," █":" ","  ":" "},h="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<c&&u<=r&&r<c&&f.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<c&&u<=r+1&&r+1<c&&f.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",h+=t<1&&r+1>=c?l[i]:g[i];h+="\n"}return a%2&&t>0?h.substring(0,h.length-a-1)+Array(a+1).join("▀"):h.substring(0,h.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=f.getModuleCount()*t+2*r,u=r,c=a-r,g=Array(t+1).join("██"),l=Array(t+1).join("  "),h="",s="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),s="",n=0;n<a;n+=1)i=1,u<=n&&n<c&&u<=e&&e<c&&f.isDark(o,Math.floor((n-u)/t))&&(i=0),s+=i?g:l;for(o=0;o<t;o+=1)h+=s+"\n"}return h.substring(0,h.length-1)},f.renderTo2dContext=function(t,r){r=r||2;for(var e=f.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=f.isDark(n,o)?"black":"white",t.fillRect(o*r,n*r,r,r)},f};t.stringToBytes=(t.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,t.createStringToBytes=function(t,r){var e=function(){for(var e=S(t),n=function(){var t=e.read();if(-1==t)throw"eof";return t},o=0,i={};;){var a=e.read();if(-1==a)break;var u=n(),f=n()<<8|n();i[String.fromCharCode(a<<8|u)]=f,o+=1}if(o!=r)throw o+" != "+r;return i}(),n="?".charCodeAt(0);return function(t){for(var r=[],o=0;o<t.length;o+=1){var i=t.charCodeAt(o);if(i<128)r.push(i);else{var a=e[t.charAt(o)];"number"==typeof a?(255&a)==a?r.push(a):(r.push(a>>>8),r.push(255&a)):r.push(n)}}return r}};var r,e,n,o,i,a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],r=function(t,r){var e={};return e.totalCount=t,e.dataCount=r,e},e={};return e.getRSBlocks=function(e,n){var o=function(r,e){switch(e){case g.L:return t[4*(r-1)+0];case g.M:return t[4*(r-1)+1];case g.Q:return t[4*(r-1)+2];case g.H:return t[4*(r-1)+3];default:return}}(e,n);if(void 0===o)throw"bad rs block @ typeNumber:"+e+"/errorCorrectionLevel:"+n;for(var i=o.length/3,a=[],u=0;u<i;u+=1)for(var f=o[3*u+0],c=o[3*u+1],l=o[3*u+2],h=0;h<f;h+=1)a.push(r(c,l));return a},e}(),b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e},M=function(t){var r=a,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+2<r.length;)t.put(o(r.substring(n,n+3)),10),n+=3;n<r.length&&(r.length-n==1?t.put(o(r.substring(n,n+1)),4):r.length-n==2&&t.put(o(r.substring(n,n+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return n},x=function(t){var r=u,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+1<r.length;)t.put(45*o(r.charAt(n))+o(r.charAt(n+1)),11),n+=2;n<r.length&&t.put(o(r.charAt(n)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return n},m=function(r){var e=f,n=t.stringToBytes(r),o={getMode:function(){return e},getLength:function(t){return n.length},write:function(t){for(var r=0;r<n.length;r+=1)t.put(n[r],8)}};return o},L=function(r){var e=c,n=t.stringToBytesFuncs.SJIS;if(!n)throw"sjis not supported.";!function(){var t=n("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=n(r),i={getMode:function(){return e},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return i},D=function(){var t=[],r={writeByte:function(r){t.push(255&r)},writeShort:function(t){r.writeByte(t),r.writeByte(t>>>8)},writeBytes:function(t,e,n){e=e||0,n=n||t.length;for(var o=0;o<n;o+=1)r.writeByte(t[o+e])},writeString:function(t){for(var e=0;e<t.length;e+=1)r.writeByte(t.charCodeAt(e))},toByteArray:function(){return t},toString:function(){var r="";r+="[";for(var e=0;e<t.length;e+=1)e>0&&(r+=","),r+=t[e];return r+="]"}};return r},S=function(t){var r=t,e=0,n=0,o=0,i={read:function(){for(;o<8;){if(e>=r.length){if(0==o)return-1;throw"unexpected end of file./"+o}var t=r.charAt(e);if(e+=1,"="==t)return o=0,-1;t.match(/^\s$/)||(n=n<<6|a(t.charCodeAt(0)),o+=6)}var i=n>>>o-8&255;return o-=8,i}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return i},I=function(t,r,e){for(var n=function(t,r){var e=t,n=r,o=new Array(t*r),i={setPixel:function(t,r,n){o[r*e+t]=n},write:function(t){t.writeString("GIF87a"),t.writeShort(e),t.writeShort(n),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(e),t.writeShort(n),t.writeByte(0);var r=a(2);t.writeByte(2);for(var o=0;r.length-o>255;)t.writeByte(255),t.writeBytes(r,o,255),o+=255;t.writeByte(r.length-o),t.writeBytes(r,o,r.length-o),t.writeByte(0),t.writeString(";")}},a=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,i=u(),a=0;a<r;a+=1)i.add(String.fromCharCode(a));i.add(String.fromCharCode(r)),i.add(String.fromCharCode(e));var f,c,g,l=D(),h=(f=l,c=0,g=0,{write:function(t,r){if(t>>>r!=0)throw"length over";for(;c+r>=8;)f.writeByte(255&(t<<c|g)),r-=8-c,t>>>=8-c,g=0,c=0;g|=t<<c,c+=r},flush:function(){c>0&&f.writeByte(g)}});h.write(r,n);var s=0,v=String.fromCharCode(o[s]);for(s+=1;s<o.length;){var d=String.fromCharCode(o[s]);s+=1,i.contains(v+d)?v+=d:(h.write(i.indexOf(v),n),i.size()<4095&&(i.size()==1<<n&&(n+=1),i.add(v+d)),v=d)}return h.write(i.indexOf(v),n),h.write(e,n),h.flush(),l.toByteArray()},u=function(){var t={},r=0,e={add:function(n){if(e.contains(n))throw"dup key:"+n;t[n]=r,r+=1},size:function(){return r},indexOf:function(r){return t[r]},contains:function(r){return void 0!==t[r]}};return e};return i}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=D();n.write(a);for(var u=function(){var t=0,r=0,e=0,n="",o={},i=function(t){n+=String.fromCharCode(a(63&t))},a=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return o.writeByte=function(n){for(t=t<<8|255&n,r+=8,e+=1;r>=6;)i(t>>>r-6),r-=6},o.flush=function(){if(r>0&&(i(t<<6-r),t=0,r=0),e%3!=0)for(var o=3-e%3,a=0;a<o;a+=1)n+="="},o.toString=function(){return n},o}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return t}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||n>=57344?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}(function(){return qrcode});
+window.QRCode = (function(){
+  function toCanvas(canvas, text, opts, cb){
+    if(typeof opts === 'function'){ cb = opts; opts = {}; }
+    opts = opts || {};
+    try{
+      var margin = (opts.margin != null) ? opts.margin : 4;
+      var targetSize = opts.width || 128;
+      var qr = qrcode(0, 'M');
+      qr.addData(String(text));
+      qr.make();
+      var count = qr.getModuleCount();
+      var cellSize = Math.max(1, Math.floor(targetSize / (count + margin*2)));
+      var size = cellSize * (count + margin*2);
+      canvas.width = size; canvas.height = size;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,size,size);
+      ctx.fillStyle = '#000000';
+      for(var r=0;r<count;r++){
+        for(var c=0;c<count;c++){
+          if(qr.isDark(r,c)){
+            ctx.fillRect((c+margin)*cellSize, (r+margin)*cellSize, cellSize, cellSize);
+          }
+        }
+      }
+      if(cb) cb(null);
+    }catch(e){ if(cb) cb(e); else throw e; }
+  }
+  return { toCanvas: toCanvas };
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js';"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js';"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js';"></script>
+<style>
+  :root{
+    --bg:#EEF2E7; --bg2:#E4EADA; --ink:#1E2A22; --card:#FFFFFF; --mustard:#E3A73B; --mustard2:#F0C069;
+    --teal:#2F6F62; --teal2:#3E8A78; --danger:#C1533C; --line:#DCE2D1;
+    --izin:#8a6212; --sakit:#2F6F62; --alpa:#C1533C;
+    --shadow:0 1px 2px rgba(30,42,34,.04), 0 6px 16px -8px rgba(30,42,34,.14);
+    --shadow-lg:0 10px 30px -12px rgba(30,42,34,.28);
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+    box-sizing:border-box;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#141912; --bg2:#182018; --card:#1E2620; --line:#31402F;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 16px -8px rgba(0,0,0,.5);
+      --shadow-lg:0 10px 30px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{ --bg:#141912; --bg2:#182018; --card:#1E2620; --line:#31402F; }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{
+    margin:0; color:var(--ink);
+    background:
+      radial-gradient(720px 360px at 100% -40px, rgba(227,167,59,.16), transparent 60%),
+      radial-gradient(720px 360px at -10% 0%, rgba(47,111,98,.14), transparent 55%),
+      var(--bg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    min-height:100%;
+  }
+  h1,h2,h3,.brand{font-family:"Space Grotesk",-apple-system,sans-serif;}
+  header{
+    position:sticky; top:0; padding:calc(env(safe-area-inset-top,0px) + 16px) 18px 12px;
+    background:linear-gradient(180deg, var(--bg) 60%, rgba(238,242,231,0)); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line); z-index:5;
+  }
+  .brand{font-weight:700; font-size:1.35rem; margin:0; letter-spacing:-.01em; display:flex; align-items:center; gap:8px;}
+  .brand .logo{
+    display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:10px;
+    background:linear-gradient(135deg, var(--teal), var(--teal2)); box-shadow:var(--shadow); font-size:1.05rem;
+  }
+  .sub{font-size:.82rem; opacity:.6; margin-top:2px; font-weight:500;}
+  nav{display:flex; gap:2px; margin:14px 18px 0; border-bottom:1px solid var(--line); overflow-x:auto; scrollbar-width:none;}
+  nav::-webkit-scrollbar{display:none;}
+  nav button{
+    flex:1; padding:10px 6px; background:none; border:none; color:var(--ink);
+    font-size:.82rem; font-weight:600; opacity:.5; cursor:pointer; white-space:nowrap;
+    border-bottom:2.5px solid transparent; transition:opacity .15s, color .15s, border-color .15s;
+    display:flex; align-items:center; justify-content:center; gap:5px;
+  }
+  nav button:hover{opacity:.8;}
+  nav button.active{opacity:1; border-color:var(--teal); color:var(--teal);}
+  main{padding:18px; max-width:720px; margin:0 auto;}
+  .view{display:none;} .view.active{display:block; animation:fadeIn .25s ease;}
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-top:3px solid var(--teal); border-radius:14px;
+    padding:18px; margin-bottom:14px; box-shadow:var(--shadow);
+  }
+  .card h3{font-size:1rem; letter-spacing:-.01em;}
+  #reader{width:100%; border-radius:10px; overflow:hidden; background:#000; min-height:220px; box-shadow:var(--shadow);}
+  .flash{
+    margin-top:12px; padding:12px 14px; border-radius:10px; font-weight:600; display:none; font-size:.88rem;
+  }
+  .flash.ok{background:rgba(47,111,98,.15); color:var(--teal); display:block;}
+  .flash.warn{background:rgba(227,167,59,.2); color:#8a6212; display:block;}
+  .flash.err{background:rgba(193,83,60,.15); color:var(--danger); display:block;}
+  button.btn{
+    padding:11px 18px; border-radius:10px; border:none; font-weight:700; cursor:pointer;
+    background:linear-gradient(135deg, var(--teal), var(--teal2)); color:#fff; font-size:.92rem;
+    box-shadow:0 4px 12px -4px rgba(47,111,98,.5); transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  button.btn:hover{transform:translateY(-1px); box-shadow:0 6px 16px -4px rgba(47,111,98,.55);}
+  button.btn:active{transform:translateY(0); opacity:.9;}
+  button.btn.ghost{background:var(--card); border:1px solid var(--line); color:var(--ink); box-shadow:var(--shadow);}
+  button.btn.danger{background:linear-gradient(135deg, var(--danger), #d6684f); box-shadow:0 4px 12px -4px rgba(193,83,60,.5);}
+  button.btn.sm{padding:7px 10px; font-size:.78rem; border-radius:8px;}
+  label.lbl{display:block; font-size:.76rem; opacity:.6; margin-bottom:4px; font-weight:700; text-transform:uppercase; letter-spacing:.02em;}
+  input,select{
+    padding:10px 11px; border:1px solid var(--line); border-radius:9px; background:var(--card);
+    color:var(--ink); font-size:.95rem; width:100%; transition:border-color .15s, box-shadow .15s;
+  }
+  input:focus,select:focus{outline:none; border-color:var(--teal); box-shadow:0 0 0 3px rgba(47,111,98,.15);}
+  .row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;}
+  .row > *{flex:1; min-width:130px;}
+  .field{margin-bottom:10px;}
+  table{width:100%; border-collapse:collapse; font-size:.9rem;}
+  th,td{text-align:left; padding:9px 6px; border-bottom:1px solid var(--line);}
+  th{opacity:.55; font-weight:700; font-size:.74rem; text-transform:uppercase; letter-spacing:.03em;}
+  tbody tr{transition:background .12s;}
+  tbody tr:hover{background:rgba(47,111,98,.06);}
+  .pill{font-size:.72rem; padding:3px 10px; border-radius:20px; background:rgba(47,111,98,.15); color:var(--teal); font-weight:700;}
+  .pill.I{background:rgba(227,167,59,.2); color:var(--izin);}
+  .pill.S{background:rgba(47,111,98,.15); color:var(--sakit);}
+  .pill.A{background:rgba(193,83,60,.15); color:var(--alpa);}
+  .pill.H{background:rgba(47,111,98,.15); color:var(--teal);}
+  .empty{opacity:.5; padding:26px 0; text-align:center; font-size:.88rem;}
+  .qrbox{display:flex; align-items:center; gap:12px; padding:12px 4px; border-bottom:1px solid var(--line);}
+  .qrbox:last-child{border-bottom:none;}
+  .qrbox canvas{width:56px; height:56px; border-radius:8px; box-shadow:var(--shadow); background:#fff; padding:4px;}
+  .qrbox .btnRow{display:flex; gap:6px; flex:0 0 auto;}
+  .actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;}
+  tfoot td{font-weight:700; border-top:2px solid var(--line); border-bottom:none;}
+  .hint{font-size:.8rem; opacity:.55; margin-top:6px;}
+  #flash{
+    position:fixed; left:50%; bottom:calc(env(safe-area-inset-bottom,0px) + 18px);
+    transform:translateX(-50%); max-width:92vw; width:max-content; margin:0;
+    box-shadow:var(--shadow-lg); z-index:50;
+  }
+  #printArea, #printAreaRekap{display:none;}
+  @media print{
+    header, nav, #view-scan .card:first-child, .actions, .card > .row, .card > .field, #catatanForm, #rekapForm{display:none !important;}
+    body{background:#fff; color:#000;}
+    body.mode-riwayat #printAreaRekap{display:none !important;}
+    body.mode-rekap #printArea{display:none !important;}
+    body.mode-riwayat #printArea{display:block; padding:0 4px;}
+    body.mode-rekap #printAreaRekap{display:block; padding:0 4px;}
+    @page{ size: landscape; margin:12mm; }
+    #printArea h2, #printAreaRekap h2{font-family:"Space Grotesk",sans-serif; margin-bottom:2px;}
+    #printArea table, #printAreaRekap table{width:100%; border-collapse:collapse;}
+    #printArea th,#printArea td,#printAreaRekap th,#printAreaRekap td{border:1px solid #999; padding:6px 8px; font-size:.85rem;}
+    #rkTable th,#rkTable td{padding:3px 2px; font-size:.68rem; text-align:center;}
+    #rkTable th.name,#rkTable td.name{text-align:left; padding-left:6px; font-size:.75rem;}
+    #rkTable th.no,#rkTable td.no{width:22px;}
+    #rkTable th.day,#rkTable td.day{width:16px;}
+    #rkTable th.tot,#rkTable td.tot{width:24px; font-weight:700;}
+    #printAreaRekap .rekapHead{text-align:center; margin-bottom:14px;}
+    #printAreaRekap .rekapHead h2{margin:0; font-size:1.15rem;}
+    #printAreaRekap .rekapHead p{margin:2px 0;}
+    .sig{display:flex; justify-content:space-between; margin-top:50px; font-size:.9rem;}
+    .sig .block{width:45%; text-align:center;}
+    .sig .space{height:60px;}
+    .sig .name{font-weight:700; text-decoration:underline;}
+  }
+</style>
+</head>
+<body>
+<script id="__seedScript">window.__SEED__={"students":[{"id":"3199929298","nama":"Aida Halfis","kelas":"1"}],"presensi":[{"id":"3199929298","nama":"Aida Halfis","kelas":"1","dateKey":"2026-09-26","time":"-","status":"I","ket":""}]};</script>
+
+<header>
+  <p class="brand"><span class="logo">📋</span> Presensi Siswa</p>
+  <p class="sub" id="todayLabel">Sabtu, 26 September 2026</p>
+</header>
+<div class="card" style="margin:8px 12px"><label class="lbl">Presensi untuk</label><select id="mapelSel"><option value="HARIAN">Harian (Guru Kelas)</option><option value="PAIPB">PAIPB (per pertemuan)</option><option value="PJOK">PJOK (per pertemuan)</option></select></div>
+<div class="flash" id="flash"></div>
+<nav>
+  <button class="tab" data-view="scan">📷 Scan</button>
+  <button class="tab active" data-view="siswa">🧑‍🎓 Siswa</button>
+  <button class="tab" data-view="catatan">📝 Catatan</button>
+  <button class="tab" data-view="riwayat">🗂️ Riwayat</button>
+  <button class="tab" data-view="rekap">📊 Rekap</button>
+</nav>
+<main>
+
+  <section class="view" id="view-scan">
+    <div class="card">
+      <div id="reader"></div>
+      <div class="actions">
+        <button class="btn" id="startBtn">Mulai Scan</button>
+        <button class="btn ghost" id="stopBtn" style="display:none">Berhenti</button>
+      </div>
+      <p class="sub" id="cameraHint" style="margin-top:10px">Pastikan halaman ini dibuka lewat alamat <b>https://</b> dan izinkan akses Kamera saat diminta oleh browser.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 8px">Hadir hari ini</h3>
+      <table id="todayTable"><thead><tr><th>Waktu</th><th>Nama</th><th>Kelas</th></tr></thead><tbody></tbody></table>
+      <p class="empty" id="todayEmpty" style="display: block;">Belum ada yang absen hari ini.</p>
+    </div>
+  </section>
+
+  <section class="view active" id="view-siswa">
+    <div class="card">
+      <h3 style="margin:0 0 6px">Simpan ke Google Sheets</h3>
+      <p class="sub" style="margin-bottom:10px">Setiap presensi yang dicatat otomatis dikirim ke Google Sheets Anda. Tempel alamat Web App dari Apps Script (berakhiran <b>/exec</b>).</p>
+      <div class="row">
+        <input id="shUrl" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off">
+        <input id="shToken" placeholder="Kode rahasia (sama dengan di Apps Script)" autocomplete="off">
+      </div>
+      <div class="actions" style="margin-top:4px">
+        <button class="btn" id="shSaveBtn">Simpan Pengaturan</button>
+        <button class="btn ghost" id="shTestBtn">Tes Koneksi</button>
+        <button class="btn ghost" id="shSyncAllBtn">Kirim Semua Data</button>
+      </div>
+      <p class="hint" id="shStatus">Belum tersambung.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 10px">Tambah Siswa</h3>
+      <div class="row">
+        <input id="inId" placeholder="NISN / ID">
+        <input id="inNama" placeholder="Nama">
+        <input id="inKelas" placeholder="Kelas (opsional)">
+      </div>
+      <p class="hint" style="margin:6px 0 10px">Kelas boleh dikosongkan — cukup isi Nama &amp; NISN, barcode tetap bisa dibuat.</p>
+      <div class="row" style="gap:8px">
+        <button class="btn" id="addStudentBtn">Tambah</button>
+        <button class="btn ghost" id="toggleImportBtn">📥 Import Data</button>
+      </div>
+      <div id="importPanel" style="display:none; margin-top:14px; padding-top:14px; border-top:1px dashed #c9cfbc">
+        <p class="sub" style="margin-bottom:8px">Import banyak siswa sekaligus dari file CSV/Excel, atau tempel data langsung dari spreadsheet.</p>
+        <p class="hint" style="margin-bottom:10px">Urutan kolom: <b>NISN/ID, Nama, Kelas</b> (Kelas boleh kosong). Baris judul kolom otomatis dilewati, dan NISN yang sudah terdaftar akan dilewati.</p>
+        <div class="row"><input type="file" id="importFile" accept=".csv,.xlsx,.xls"></div>
+        <p class="sub" style="margin:10px 0 4px">atau tempel data di sini (satu siswa per baris):</p>
+        <textarea id="importPaste" rows="5" placeholder="3199929298, Aida Halfis, 1&#10;3199929300, Budi Santoso, 1" style="width:100%; box-sizing:border-box; font-family:inherit; font-size:.9rem; padding:8px; border-radius:8px; border:1px solid #c9cfbc"></textarea>
+        <div class="row" style="gap:8px; margin-top:10px">
+          <button class="btn" id="previewImportBtn">Pratinjau</button>
+          <button class="btn ghost" id="cancelImportBtn">Batal</button>
+        </div>
+        <div id="importPreview" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 8px">Daftar &amp; Kode Barcode</h3>
+      <p class="sub" style="margin-bottom:10px">Unduh kode QR tiap siswa sebagai gambar PNG untuk ditempel di kartu, lalu di-scan saat absen.</p>
+      <p class="flash" id="qrLibWarning" style="display: none;">Pustaka barcode gagal dimuat. Periksa koneksi internet lalu muat ulang halaman ini.</p>
+      <div id="studentList"><div class="qrbox"><div style="flex:1"><strong>Aida Halfis</strong><br><span class="sub">3199929298 · 1</span></div><canvas width="69" height="69"></canvas><div class="btnRow"><button class="btn ghost sm" title="Unduh barcode PNG">PNG</button><button class="btn ghost sm">Hapus</button></div></div></div>
+      <p class="empty" id="studentEmpty" style="display: none;">Belum ada siswa. Tambahkan di atas.</p>
+      <button class="btn ghost" id="printCardsBtn" style="margin-top:10px">🖼️ Unduh Semua Barcode (PNG)</button>
+    </div>
+  </section>
+
+  <section class="view" id="view-catatan">
+    <div class="card" id="catatanForm">
+      <h3 style="margin:0 0 10px">Catat Ijin / Sakit / Alpa</h3>
+      <p class="sub" style="margin-bottom:10px">Gunakan ini untuk siswa yang tidak scan barcode karena Ijin, Sakit, atau Alpa (tanpa keterangan).</p>
+      <div class="row">
+        <div class="field" style="flex:2">
+          <label class="lbl">Siswa</label>
+          <select id="catSiswa"></select>
+        </div>
+        <div class="field">
+          <label class="lbl">Tanggal</label>
+          <input type="date" id="catTanggal">
+        </div>
+        <div class="field">
+          <label class="lbl">Status</label>
+          <select id="catStatus">
+            <option value="I">Ijin</option>
+            <option value="S">Sakit</option>
+            <option value="A">Alpa</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="lbl">Keterangan (opsional)</label>
+        <input id="catKet" placeholder="mis. Ijin acara keluarga">
+      </div>
+      <button class="btn" id="addCatatanBtn">Simpan Catatan</button>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 8px">Catatan Terbaru</h3>
+      <table><thead><tr><th>Tanggal</th><th>Nama</th><th>Status</th><th>Keterangan</th><th></th></tr></thead><tbody id="catatanBody"></tbody></table>
+      <p class="empty" id="catatanEmpty">Belum ada catatan.</p>
+    </div>
+  </section>
+
+  <section class="view" id="view-riwayat">
+    <div class="card">
+      <div class="row" style="align-items:center">
+        <h3 style="margin:0; flex:2">Riwayat Presensi</h3>
+        <div class="field" style="flex:1; margin-bottom:0">
+          <input type="month" id="riwayatFilter">
+        </div>
+      </div>
+      <div class="actions" style="margin:6px 0 0">
+        <button class="btn ghost" id="exportBtn">Unduh CSV</button>
+        <button class="btn ghost" id="exportExcelBtn">Unduh Excel</button>
+        <button class="btn" id="printBtn">Cetak PDF (Landscape)</button>
+      </div>
+      <table style="margin-top:12px">
+        <thead><tr><th>Tanggal</th><th>Waktu</th><th>Nama</th><th>Kelas</th><th>Status</th><th>Keterangan</th></tr></thead>
+        <tbody id="historyBody"><tr><td>2026-09-26</td><td>-</td><td>Aida Halfis</td><td>1</td><td><span class="pill I">Ijin</span></td><td></td></tr></tbody>
+        <tfoot id="historyFoot"><tr><td colspan="4">Rekapitulasi</td><td colspan="2">Hadir: 0 &nbsp; Ijin: 1 &nbsp; Sakit: 0 &nbsp; Alpa: 0</td></tr></tfoot>
+      </table>
+      <p class="empty" id="historyEmpty" style="display: none;">Belum ada riwayat.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 8px">Ringkasan Kehadiran</h3>
+      <p class="sub" id="riwayatPct" style="margin:0 0 12px">Persentase kehadiran: 0.0% (dari 1 entri)</p>
+      <div id="riwayatChart"><svg viewBox="0 0 336 128" width="100%" style="max-width:360px; color:inherit; display:block"><text x="0" y="14.96" font-size="12" fill="currentColor">Hadir</text>
+        <rect x="46" y="0" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="0" width="0" height="22" rx="4" fill="#2F6F62"></rect>
+        <text x="274" y="14.96" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="46.96" font-size="12" fill="currentColor">Ijin</text>
+        <rect x="46" y="32" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="32" width="220" height="22" rx="4" fill="#E3A73B"></rect>
+        <text x="274" y="46.96" font-size="12" fill="currentColor">1 (100%)</text><text x="0" y="78.96000000000001" font-size="12" fill="currentColor">Sakit</text>
+        <rect x="46" y="64" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="64" width="0" height="22" rx="4" fill="#4C7EA8"></rect>
+        <text x="274" y="78.96000000000001" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="110.96000000000001" font-size="12" fill="currentColor">Alpa</text>
+        <rect x="46" y="96" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="96" width="0" height="22" rx="4" fill="#C1533C"></rect>
+        <text x="274" y="110.96000000000001" font-size="12" fill="currentColor">0 (0%)</text></svg></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-rekap">
+    <div class="card" id="rekapForm">
+      <h3 style="margin:0 0 10px" id="rekapHeading">Cetak Rekapitulasi Bulanan — Harian (Guru Kelas)</h3>
+      <div class="row">
+        <div class="field">
+          <label class="lbl">Tahun Ajaran</label>
+          <select id="rkTahunAjaran"><option value="2024/2025">2024/2025</option><option value="2025/2026">2025/2026</option><option value="2026/2027">2026/2027</option><option value="2027/2028">2027/2028</option><option value="2028/2029">2028/2029</option><option value="__manual">Lainnya (isi manual)</option></select>
+        </div>
+        <div class="field" id="rkTahunAjaranManualWrap" style="display:none">
+          <label class="lbl">Tahun Ajaran (manual)</label>
+          <input id="rkTahunAjaranManual" placeholder="mis. 2026/2027">
+        </div>
+        <div class="field">
+          <label class="lbl">Bulan Presensi</label>
+          <input type="month" id="rkBulan">
+        </div>
+        <div class="field">
+          <label class="lbl">Kelas yang Diampu</label>
+          <select id="rkKelas"><option value="">Semua Kelas</option><option value="1">1</option></select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label class="lbl">Nama Guru</label>
+          <input id="rkNamaGuru" placeholder="Nama guru kelas">
+        </div>
+        <div class="field">
+          <label class="lbl">Status Kepegawaian</label>
+          <select id="rkStatusGuru">
+            <option value="NIP">NIP</option>
+            <option value="NIPPPK">NIPPPK</option>
+            <option value="NIPPPKPW">NIPPPKPW</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lbl">Nomor Induk Guru</label>
+          <input id="rkNomorGuru" placeholder="Nomor sesuai status di atas">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label class="lbl">Nama Kepala Sekolah</label>
+          <input id="rkNamaKepsek" placeholder="Nama kepala sekolah">
+        </div>
+        <div class="field">
+          <label class="lbl">NIP Kepala Sekolah</label>
+          <input id="rkNipKepsek" placeholder="NIP kepala sekolah">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label class="lbl">Tempat Pengesahan</label>
+          <input id="rkTempat" placeholder="mis. Lanas" value="Lanas">
+        </div>
+        <div class="field">
+          <label class="lbl">Tanggal Pengesahan</label>
+          <input type="date" id="rkTanggal">
+        </div>
+      </div>
+      <div class="actions" style="margin-top:4px">
+        <button class="btn ghost" id="saveRekapSettingsBtn" type="button">💾 Simpan Data Guru &amp; Kepsek</button>
+        <button class="btn" id="printRekapBtn">Cetak Rekapitulasi Bulanan</button>
+      </div>
+      <p class="hint" id="rekapSettingsHint">Rekap dihitung dari data presensi &amp; catatan pada bulan yang dipilih, untuk kelas yang dipilih.</p>
+    </div>
+    <div class="card" id="rekapPreview" style="display: block;">
+      <h3 style="margin:0 0 8px">Ringkasan Kelas</h3>
+      <p class="sub" id="rekapPct" style="margin:0 0 12px">Persentase kehadiran kelas: 0.0% (dari 1 entri tercatat)</p>
+      <div id="rekapChart"><svg viewBox="0 0 336 128" width="100%" style="max-width:360px; color:inherit; display:block"><text x="0" y="14.96" font-size="12" fill="currentColor">Hadir</text>
+        <rect x="46" y="0" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="0" width="0" height="22" rx="4" fill="#2F6F62"></rect>
+        <text x="274" y="14.96" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="46.96" font-size="12" fill="currentColor">Ijin</text>
+        <rect x="46" y="32" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="32" width="220" height="22" rx="4" fill="#E3A73B"></rect>
+        <text x="274" y="46.96" font-size="12" fill="currentColor">1 (100%)</text><text x="0" y="78.96000000000001" font-size="12" fill="currentColor">Sakit</text>
+        <rect x="46" y="64" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="64" width="0" height="22" rx="4" fill="#4C7EA8"></rect>
+        <text x="274" y="78.96000000000001" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="110.96000000000001" font-size="12" fill="currentColor">Alpa</text>
+        <rect x="46" y="96" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="96" width="0" height="22" rx="4" fill="#C1533C"></rect>
+        <text x="274" y="110.96000000000001" font-size="12" fill="currentColor">0 (0%)</text></svg></div>
+    </div>
+  </section>
+
+</main>
+
+<div id="printArea">
+  <h2>Rekap Presensi Siswa</h2>
+  <p id="printMeta"></p>
+  <table><thead><tr><th>Tanggal</th><th>Waktu</th><th>Nama</th><th>Kelas</th><th>Status</th><th>Keterangan</th></tr></thead>
+    <tbody id="printBody"></tbody>
+    <tfoot id="printFoot"></tfoot>
+  </table>
+</div>
+
+<div id="printAreaRekap">
+  <div class="rekapHead">
+    <h2 id="rkTitle">Rekapitulasi Presensi UPTD SPF SD Negeri Lanas 1<br>Tahun Ajaran 2026/2027</h2>
+    <p id="rkSubTitle">Kelas: Semua Kelas</p>
+    <p id="rkSubTitle2">Bulan: September 2026</p>
+  </div>
+  <table id="rkTable">
+    <thead><tr id="rkHeadRow"><th class="no">No</th><th class="name">Nama Siswa</th><th class="day">1</th><th class="day">2</th><th class="day">3</th><th class="day">4</th><th class="day">5</th><th class="day">6</th><th class="day">7</th><th class="day">8</th><th class="day">9</th><th class="day">10</th><th class="day">11</th><th class="day">12</th><th class="day">13</th><th class="day">14</th><th class="day">15</th><th class="day">16</th><th class="day">17</th><th class="day">18</th><th class="day">19</th><th class="day">20</th><th class="day">21</th><th class="day">22</th><th class="day">23</th><th class="day">24</th><th class="day">25</th><th class="day">26</th><th class="day">27</th><th class="day">28</th><th class="day">29</th><th class="day">30</th><th class="tot">H</th><th class="tot">I</th><th class="tot">S</th><th class="tot">A</th><th class="tot">%H</th></tr></thead>
+    <tbody id="rkBody"><tr><td class="no">1</td><td class="name">Aida Halfis</td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day">I</td><td class="day"></td><td class="day"></td><td class="day"></td><td class="day"></td><td class="tot">0</td><td class="tot">1</td><td class="tot">0</td><td class="tot">0</td><td class="tot">0.0%</td></tr></tbody>
+    <tfoot id="rkFoot"><tr><td class="no"></td><td class="name">Jumlah hadir/hari</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="day">0</td><td class="tot">0</td><td class="tot">1</td><td class="tot">0</td><td class="tot">0</td><td class="tot">0.0%</td></tr></tfoot>
+  </table>
+  <p id="rkPctPrint" style="margin-top:14px; font-size:.85rem; font-weight:700">Persentase kehadiran kelas: 0.0% (dari 1 entri tercatat)</p>
+  <div id="rkChartPrint" style="margin-top:6px"><svg viewBox="0 0 336 128" width="100%" style="max-width:360px; color:inherit; display:block"><text x="0" y="14.96" font-size="12" fill="currentColor">Hadir</text>
+        <rect x="46" y="0" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="0" width="0" height="22" rx="4" fill="#2F6F62"></rect>
+        <text x="274" y="14.96" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="46.96" font-size="12" fill="currentColor">Ijin</text>
+        <rect x="46" y="32" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="32" width="220" height="22" rx="4" fill="#E3A73B"></rect>
+        <text x="274" y="46.96" font-size="12" fill="currentColor">1 (100%)</text><text x="0" y="78.96000000000001" font-size="12" fill="currentColor">Sakit</text>
+        <rect x="46" y="64" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="64" width="0" height="22" rx="4" fill="#4C7EA8"></rect>
+        <text x="274" y="78.96000000000001" font-size="12" fill="currentColor">0 (0%)</text><text x="0" y="110.96000000000001" font-size="12" fill="currentColor">Alpa</text>
+        <rect x="46" y="96" width="220" height="22" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="46" y="96" width="0" height="22" rx="4" fill="#C1533C"></rect>
+        <text x="274" y="110.96000000000001" font-size="12" fill="currentColor">0 (0%)</text></svg></div>
+  <div class="sig">
+    <div class="block">
+      <p>Mengetahui,<br>Kepala Sekolah</p>
+      <div class="space"></div>
+      <p class="name" id="rkSigKepsekName">-</p>
+      <p id="rkSigKepsekNip">NIP. -</p>
+    </div>
+    <div class="block">
+      <p id="rkSigPlace">Lanas, 26 September 2026</p>
+      <p id="rkSigRole">Guru Kelas</p>
+      <div class="space"></div>
+      <p class="name" id="rkSigGuruName">-</p>
+      <p id="rkSigGuruNip">NIP. -</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const todayStr = () => new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const dateKey = d => d.toISOString().slice(0,10);
+  const STATUS_LABEL = {H:'Hadir', I:'Ijin', S:'Sakit', A:'Alpa'};
+  const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  $('#todayLabel').textContent = todayStr();
+
+  // ---- Angka ke teks (terbilang) untuk label kelas, mis. "1" -> "satu" ----
+  const SATUAN_ID = ['', 'satu','dua','tiga','empat','lima','enam','tujuh','delapan','sembilan'];
+  function terbilang(n){
+    n = Math.floor(Math.abs(n));
+    if(n < 10) return SATUAN_ID[n];
+    if(n < 20){
+      if(n === 10) return 'sepuluh';
+      if(n === 11) return 'sebelas';
+      return SATUAN_ID[n-10] + ' belas';
+    }
+    if(n < 100){
+      const sisa = n % 10;
+      return SATUAN_ID[Math.floor(n/10)] + ' puluh' + (sisa ? ' '+SATUAN_ID[sisa] : '');
+    }
+    if(n < 200) return 'seratus' + (n%100 ? ' '+terbilang(n%100) : '');
+    if(n < 1000){
+      const sisa = n % 100;
+      return SATUAN_ID[Math.floor(n/100)] + ' ratus' + (sisa ? ' '+terbilang(sisa) : '');
+    }
+    return String(n);
+  }
+  // Kalau nilai kelas berupa angka murni (mis. "1"), lengkapi dengan teksnya: "1 (satu)".
+  // Kalau bukan angka murni (mis. "1A", "VI"), tampilkan apa adanya.
+  function formatKelasLabel(kelas){
+    const k = String(kelas ?? '').trim();
+    if(/^\d+$/.test(k)) return `${k} (${terbilang(parseInt(k,10))})`;
+    return k;
+  }
+
+  let students = [];
+  let curMapel = 'HARIAN'; const mp = r => r.mapel || 'HARIAN';
+  let presensi = []; // {id, nama, kelas, dateKey, time, status, ket}
+  let presensiByDate = {}; // dateKey -> [{id,nama,kelas,time,status,ket}] — cermin dokumen db per tanggal
+  const seed = window.__SEED__ || null; // present only in files downloaded via "Unduh Aplikasi"
+  try{
+    students = JSON.parse(localStorage.getItem('presensi_students') || (seed ? JSON.stringify(seed.students) : '[]'));
+    presensi = JSON.parse(localStorage.getItem('presensi_records') || localStorage.getItem('presensi_attendance') || (seed ? JSON.stringify(seed.presensi) : '[]'));
+    presensi.forEach(r=>{ if(!r.status) r.status='H'; });
+    presensi.forEach(r=>{ (presensiByDate[r.dateKey] = presensiByDate[r.dateKey]||[]).push({...r}); });
+  }catch(e){ students=[]; presensi=[]; presensiByDate={}; }
+
+  // ---- Penyimpanan bersama (capability "db"): data siswa & presensi ikut
+  // tersimpan di server milik artifact ini, sehingga tetap ada & tersinkron
+  // meski dibuka/diedit oleh pengguna lain di perangkat lain. localStorage
+  // tetap dipakai sebagai cache lokal supaya halaman tetap tampil cepat &
+  // tetap berfungsi kalau capability db tidak tersedia (mis. dibuka di luar
+  // claude.ai).
+  let dbApi = null;
+  let dbAvailable = false;
+
+  function save(){
+    try{
+      localStorage.setItem('presensi_students', JSON.stringify(students));
+      localStorage.setItem('presensi_records', JSON.stringify(presensi));
+    }catch(e){}
+  }
+
+  function rebuildPresensiFromByDate(){
+    const flat = [];
+    Object.keys(presensiByDate).forEach(dateKey=>{
+      (presensiByDate[dateKey]||[]).forEach(r=> flat.push({...r, dateKey}));
+    });
+    presensi = flat;
+  }
+
+  async function dbSaveStudent(s){
+    if(!dbAvailable) return;
+    try{ await dbApi.collection('students').doc(s.id).set({nama:s.nama||'', kelas:s.kelas||''}); }
+    catch(e){ flash('Tersimpan lokal, tapi gagal menyinkronkan ke penyimpanan bersama.', 'warn'); }
+  }
+  async function dbDeleteStudent(id){
+    if(!dbAvailable) return;
+    try{ await dbApi.collection('students').doc(id).delete(); }catch(e){}
+  }
+  async function dbSavePresensiDay(dateKey, records){
+    if(!dbAvailable) return;
+    try{ await dbApi.collection('presensi').doc(dateKey).set({records}); }catch(e){}
+  }
+
+  async function initDb(){
+    try{ dbApi = await claude.use('db'); }catch(e){ dbApi = null; }
+    if(!dbApi) return; // tetap jalan dengan localStorage saja (mis. di luar claude.ai)
+    dbAvailable = true;
+    dbApi.collection('students').onSnapshot(snap=>{
+      students = snap.docs.map(d=>({id:d.id, ...(d.data()||{})}));
+      save(); renderStudents();
+      if($('#view-catatan').classList.contains('active')) renderCatatanForm();
+      if($('#view-rekap').classList.contains('active')) renderRekapForm();
+    }, ()=>{});
+    dbApi.collection('presensi').onSnapshot(snap=>{
+      presensiByDate = {};
+      snap.docs.forEach(d=>{ presensiByDate[d.id] = (d.data()||{}).records || []; });
+      rebuildPresensiFromByDate();
+      save();
+      renderToday(); renderHistory();
+      if($('#view-catatan').classList.contains('active')) renderCatatan();
+      if($('#view-rekap').classList.contains('active')) renderRekapForm();
+    }, ()=>{});
+  }
+
+  // ---- Sinkronisasi ke Google Sheets (lewat Google Apps Script Web App) ----
+  // Data tetap disimpan lokal dulu. Pengiriman ke Sheets bersifat "idempoten"
+  // (menimpa baris tanggal+mapel yang sama), jadi aman dikirim ulang. Kalau HP
+  // sedang offline, antrean disimpan dan dikirim otomatis saat koneksi kembali.
+  const SHEETS_CFG_KEY = 'presensi_sheets_cfg', SHEETS_PENDING_KEY = 'presensi_sheets_pending';
+  function sheetsCfg(){ try{ return JSON.parse(localStorage.getItem(SHEETS_CFG_KEY)||'{}')||{}; }catch(e){ return {}; } }
+  function sheetsPending(){
+    try{ const p = JSON.parse(localStorage.getItem(SHEETS_PENDING_KEY)||'null'); return {students:!!(p&&p.students), days:(p&&p.days)||[]}; }
+    catch(e){ return {students:false, days:[]}; }
+  }
+  function setPending(p){ try{ localStorage.setItem(SHEETS_PENDING_KEY, JSON.stringify(p)); }catch(e){} }
+  function setShStatus(msg){ const el = $('#shStatus'); if(el) el.textContent = msg; }
+
+  async function sheetsPost(payload){
+    const cfg = sheetsCfg();
+    if(!cfg.url) return {ok:false, msg:'Alamat Web App belum diisi'};
+    const body = JSON.stringify({...payload, token: cfg.token||''});
+    const headers = {'Content-Type':'text/plain;charset=utf-8'};
+    try{
+      const r = await fetch(cfg.url, {method:'POST', headers, body});
+      const j = await r.json();
+      return {ok: !!j.ok, msg: j.error||''};
+    }catch(e){
+      // Respons tidak terbaca (CORS) atau offline. Coba sekali lagi tanpa membaca respons.
+      try{ await fetch(cfg.url, {method:'POST', mode:'no-cors', headers, body}); return {ok:true, opaque:true}; }
+      catch(e2){ return {ok:false, msg:'offline'}; }
+    }
+  }
+
+  let sheetsFlushing = false, sheetsAgain = false;
+  const sheetsRedirtied = new Set();
+  async function sheetsFlush(){
+    if(!sheetsCfg().url) return;
+    if(sheetsFlushing){ sheetsAgain = true; return; }
+    sheetsFlushing = true;
+    try{
+      do{
+        sheetsAgain = false;
+        if(sheetsPending().students){
+          const res = await sheetsPost({action:'syncStudents', students: students.map(s=>({id:s.id, nama:s.nama, kelas:s.kelas||''}))});
+          if(!res.ok){ sheetsFail(res); return; }
+          const q = sheetsPending(); q.students = false; setPending(q);
+        }
+        for(const key of [...sheetsPending().days]){
+          const sep = key.indexOf('|'), dk = key.slice(0,sep), mapel = key.slice(sep+1);
+          const records = (presensiByDate[dk]||[]).filter(r=>(r.mapel||'HARIAN')===mapel)
+            .map(r=>({id:r.id, nama:r.nama, kelas:r.kelas||'', time:r.time||'-', status:r.status, ket:r.ket||''}));
+          sheetsRedirtied.delete(key);
+          const res = await sheetsPost({action:'syncDay', dateKey:dk, mapel, records});
+          if(!res.ok){ sheetsFail(res); return; }
+          if(!sheetsRedirtied.has(key)){ const q = sheetsPending(); q.days = q.days.filter(k=>k!==key); setPending(q); }
+          else sheetsAgain = true;
+        }
+      }while(sheetsAgain);
+      setShStatus('Terkirim ke Google Sheets pukul '+new Date().toLocaleTimeString('id-ID')+' ✔');
+    }finally{ sheetsFlushing = false; }
+  }
+  function sheetsFail(res){
+    setShStatus('Belum terkirim ('+(res.msg||'gagal')+'). Data aman di perangkat dan akan dicoba lagi.');
+    if(res.msg && res.msg!=='offline') flash('Google Sheets: '+res.msg, 'err');
+  }
+  function sheetsQueueDay(dk, mapel){
+    if(!sheetsCfg().url) return;
+    const key = dk+'|'+mapel;
+    const p = sheetsPending(); if(!p.days.includes(key)){ p.days.push(key); setPending(p); }
+    if(sheetsFlushing) sheetsRedirtied.add(key);
+    sheetsFlush();
+  }
+  function sheetsSyncStudents(){
+    if(!sheetsCfg().url) return;
+    const p = sheetsPending(); p.students = true; setPending(p);
+    sheetsFlush();
+  }
+  function sheetsQueueAll(){
+    const p = sheetsPending(); p.students = true;
+    const set = new Set(p.days);
+    Object.keys(presensiByDate).forEach(dk=>{
+      new Set((presensiByDate[dk]||[]).map(r=>r.mapel||'HARIAN')).forEach(m=> set.add(dk+'|'+m));
+    });
+    p.days = [...set]; setPending(p);
+    return sheetsFlush();
+  }
+
+  function upsert(id, dateKey, status, ket){
+    const student = students.find(s=>s.id===id);
+    if(!student) return null;
+    const dayRecords = (presensiByDate[dateKey] || []).map(r=>({...r}));
+    let rec = dayRecords.find(r=>r.id===id && mp(r)===curMapel);
+    const time = new Date().toLocaleTimeString('id-ID');
+    if(rec){
+      rec.status = status; rec.ket = ket||''; rec.nama = student.nama; rec.kelas = student.kelas;
+      if(status==='H') rec.time = time;
+    } else {
+      rec = {id, mapel:curMapel, nama:student.nama, kelas:student.kelas, time: status==='H'?time:'-', status, ket:ket||''};
+      dayRecords.push(rec);
+    }
+    presensiByDate[dateKey] = dayRecords;
+    rebuildPresensiFromByDate();
+    save();
+    dbSavePresensiDay(dateKey, dayRecords);
+    sheetsQueueDay(dateKey, curMapel);
+    return {...rec, dateKey};
+  }
+
+  // Tabs
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      btn.classList.add('active');
+      $('#view-'+btn.dataset.view).classList.add('active');
+      if(btn.dataset.view==='catatan') renderCatatanForm();
+      if(btn.dataset.view==='rekap') renderRekapForm();
+    });
+  });
+
+  function flash(msg, type){
+    const el = $('#flash');
+    el.textContent = msg;
+    el.className = 'flash '+type;
+    clearTimeout(el._t);
+    el._t = setTimeout(()=>{ el.className='flash'; }, 3000);
+  }
+
+  function escapeHtml(s){
+    return String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function pill(status){ return `<span class="pill ${status}">${STATUS_LABEL[status]||status}</span>`; }
+
+  function renderToday(){
+    const key = dateKey(new Date());
+    const rows = presensi.filter(a=>a.dateKey===key && a.status==='H' && mp(a)===curMapel);
+    $('#todayTable tbody').innerHTML = rows.map(r=>
+      `<tr><td>${r.time}</td><td>${escapeHtml(r.nama)}</td><td><span class="pill">${escapeHtml(r.kelas||'-')}</span></td></tr>`
+    ).join('');
+    $('#todayEmpty').style.display = rows.length? 'none':'block';
+  }
+
+  function countStatus(rows){
+    const c = {H:0,I:0,S:0,A:0};
+    rows.forEach(r=>{ if(c[r.status]!==undefined) c[r.status]++; });
+    return c;
+  }
+
+  function filteredHistory(){
+    const month = $('#riwayatFilter').value; // "YYYY-MM"
+    let rows = presensi.filter(r=>mp(r)===curMapel);
+    if(month) rows = rows.filter(r=>r.dateKey.startsWith(month));
+    return rows.sort((a,b)=> b.dateKey.localeCompare(a.dateKey) || String(b.time).localeCompare(String(a.time)));
+  }
+
+  function historyRowHtml(r){
+    return `<tr><td>${r.dateKey}</td><td>${r.time}</td><td>${escapeHtml(r.nama)}</td><td>${escapeHtml(r.kelas||'-')}</td><td>${pill(r.status)}</td><td>${escapeHtml(r.ket||'')}</td></tr>`;
+  }
+
+  function footRowHtml(c){
+    return `<tr><td colspan="4">Rekapitulasi</td><td colspan="2">Hadir: ${c.H} &nbsp; Ijin: ${c.I} &nbsp; Sakit: ${c.S} &nbsp; Alpa: ${c.A}</td></tr>`;
+  }
+
+  function attendancePct(c){
+    const total = c.H + c.I + c.S + c.A;
+    return { total, pct: total ? ((c.H/total)*100).toFixed(1) : '0.0' };
+  }
+
+  // Simple flat SVG bar chart for Hadir/Ijin/Sakit/Alpa counts. Works both
+  // on screen and in the printed page (no external chart library needed).
+  function barChartSVG(c){
+    const items = [
+      {label:'Hadir', val:c.H, color:'#2F6F62'},
+      {label:'Ijin',  val:c.I, color:'#E3A73B'},
+      {label:'Sakit', val:c.S, color:'#4C7EA8'},
+      {label:'Alpa',  val:c.A, color:'#C1533C'},
+    ];
+    const total = c.H+c.I+c.S+c.A;
+    const max = Math.max(1, ...items.map(i=>i.val));
+    const barH = 22, gap = 10, labelW = 46, chartW = 220, valW = 70;
+    const w = labelW+chartW+valW;
+    const h = items.length*(barH+gap);
+    const bars = items.map((it,i)=>{
+      const y = i*(barH+gap);
+      const bw = Math.max(it.val>0?2:0, Math.round((it.val/max)*chartW));
+      const pct = total ? Math.round((it.val/total)*100) : 0;
+      return `<text x="0" y="${y+barH*0.68}" font-size="12" fill="currentColor">${it.label}</text>
+        <rect x="${labelW}" y="${y}" width="${chartW}" height="${barH}" rx="4" fill="currentColor" opacity=".08"></rect>
+        <rect x="${labelW}" y="${y}" width="${bw}" height="${barH}" rx="4" fill="${it.color}"></rect>
+        <text x="${labelW+chartW+8}" y="${y+barH*0.68}" font-size="12" fill="currentColor">${it.val} (${pct}%)</text>`;
+    }).join('');
+    return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:360px; color:inherit; display:block">${bars}</svg>`;
+  }
+
+  function renderHistory(){
+    const rows = filteredHistory();
+    $('#historyBody').innerHTML = rows.map(historyRowHtml).join('');
+    const c = countStatus(rows);
+    $('#historyFoot').innerHTML = rows.length ? footRowHtml(c) : '';
+    $('#historyEmpty').style.display = rows.length? 'none':'block';
+    const p = attendancePct(c);
+    $('#riwayatPct').textContent = rows.length ? `Persentase kehadiran: ${p.pct}% (dari ${p.total} entri)` : 'Belum ada data untuk dihitung.';
+    $('#riwayatChart').innerHTML = rows.length ? barChartSVG(c) : '';
+  }
+
+  function renderCatatan(){
+    const rows = [...presensi].filter(r=>r.status!=='H' && mp(r)===curMapel).sort((a,b)=> b.dateKey.localeCompare(a.dateKey));
+    $('#catatanBody').innerHTML = rows.map(r=>
+      `<tr><td>${r.dateKey}</td><td>${escapeHtml(r.nama)}</td><td>${pill(r.status)}</td><td>${escapeHtml(r.ket||'')}</td>
+        <td><button class="btn ghost hapusCatBtn" data-id="${escapeHtml(r.id)}" data-date="${r.dateKey}" style="padding:4px 8px">Hapus</button></td></tr>`
+    ).join('');
+    $('#catatanEmpty').style.display = rows.length? 'none':'block';
+    document.querySelectorAll('.hapusCatBtn').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        presensi = presensi.filter(r=>!(r.id===b.dataset.id && r.dateKey===b.dataset.date && r.status!=='H' && mp(r)===curMapel));
+        const dkDel = b.dataset.date;
+        presensiByDate[dkDel] = (presensiByDate[dkDel]||[]).filter(r=>!(r.id===b.dataset.id && r.status!=='H' && mp(r)===curMapel));
+        dbSavePresensiDay(dkDel, presensiByDate[dkDel]);
+        sheetsQueueDay(dkDel, curMapel);
+        save(); renderCatatan(); renderHistory();
+      });
+    });
+  }
+
+  function renderCatatanForm(){
+    const sel = $('#catSiswa');
+    sel.innerHTML = students.map(s=>`<option value="${escapeHtml(s.id)}">${escapeHtml(s.nama)}${s.kelas ? ' ('+escapeHtml(s.kelas)+')' : ''}</option>`).join('');
+    if(!$('#catTanggal').value){ $('#catTanggal').value = dateKey(new Date()); $('#catTanggal').dataset.auto = '1'; }
+    renderCatatan();
+  }
+
+  function renderStudents(){
+    const list = $('#studentList');
+    list.innerHTML = '';
+    const qrOk = !!(window.QRCode && QRCode.toCanvas);
+    $('#qrLibWarning').style.display = qrOk ? 'none' : 'block';
+    students.forEach(s=>{
+      const div = document.createElement('div');
+      div.className = 'qrbox';
+      const canvas = document.createElement('canvas');
+      div.innerHTML = `<div style="flex:1"><strong>${escapeHtml(s.nama)}</strong><br><span class="sub">${escapeHtml(s.id)}${s.kelas ? ' · '+escapeHtml(s.kelas) : ''}</span></div>`;
+      div.appendChild(canvas);
+      const btnRow = document.createElement('div');
+      btnRow.className = 'btnRow';
+      const dl = document.createElement('button');
+      dl.className='btn ghost sm'; dl.textContent='PNG'; dl.title='Unduh barcode PNG';
+      dl.addEventListener('click', ()=> downloadStudentBarcodePng(s));
+      btnRow.appendChild(dl);
+      const del = document.createElement('button');
+      del.className='btn ghost sm'; del.textContent='Hapus';
+      del.addEventListener('click', ()=>{
+        students = students.filter(x=>x.id!==s.id); save(); renderStudents();
+        dbDeleteStudent(s.id);
+        sheetsSyncStudents();
+      });
+      btnRow.appendChild(del);
+      div.appendChild(btnRow);
+      list.appendChild(div);
+      if(qrOk){
+        QRCode.toCanvas(canvas, s.id, {width:84, margin:1}, err=>{
+          if(err) canvas.replaceWith(document.createTextNode('(gagal membuat barcode)'));
+        });
+      } else {
+        canvas.replaceWith(document.createTextNode('(barcode belum bisa dibuat)'));
+      }
+    });
+    $('#studentEmpty').style.display = students.length? 'none':'block';
+  }
+
+  // Gambar satu kartu barcode (QR + nama + ID + kelas) ke sebuah canvas.
+  // Dipakai baik untuk unduhan per-siswa maupun mosaik gabungan semua siswa.
+  function drawBarcodeCard(ctx, s, qrCanvas, x, y, w, h){
+    ctx.save();
+    ctx.fillStyle = '#fff';
+    roundRect(ctx, x, y, w, h, 14); ctx.fill();
+    ctx.strokeStyle = '#c9cfbc'; ctx.lineWidth = 1.5; ctx.setLineDash([5,4]);
+    roundRect(ctx, x, y, w, h, 14); ctx.stroke();
+    ctx.setLineDash([]);
+    const qrSize = Math.min(w - 32, h - 78);
+    const qrX = x + (w - qrSize) / 2;
+    const qrY = y + 16;
+    ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
+    ctx.fillStyle = '#1E2A22';
+    ctx.textAlign = 'center';
+    ctx.font = '700 15px "Space Grotesk", sans-serif';
+    ctx.fillText(s.nama, x + w / 2, qrY + qrSize + 22, w - 20);
+    ctx.font = '400 12px -apple-system, sans-serif';
+    ctx.fillStyle = '#5b6558';
+    // Kelas bersifat opsional: kalau tidak diisi, kartu cukup menampilkan
+    // Nama & NISN/ID tanpa embel-embel "Kelas" yang kosong/janggal.
+    const subLabel = s.kelas ? `${s.id} · Kelas ${formatKelasLabel(s.kelas)}` : s.id;
+    ctx.fillText(subLabel, x + w / 2, qrY + qrSize + 40, w - 20);
+    ctx.restore();
+  }
+  function roundRect(ctx, x, y, w, h, r){
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.arcTo(x+w, y, x+w, y+h, r);
+    ctx.arcTo(x+w, y+h, x, y+h, r);
+    ctx.arcTo(x, y+h, x, y, r);
+    ctx.arcTo(x, y, x+w, y, r);
+    ctx.closePath();
+  }
+  function qrToCanvas(id, width){
+    return new Promise((resolve, reject)=>{
+      const c = document.createElement('canvas');
+      QRCode.toCanvas(c, id, {width, margin:1}, err=> err ? reject(err) : resolve(c));
+    });
+  }
+  // Unduh isi canvas sebagai PNG, lewat helper offerDownload() yang sama
+  // dipakai fitur Unduh CSV/Excel/Aplikasi (pakai capability "downloads" di
+  // artifact claude.ai; otomatis jatuh ke <a download> biasa kalau di luar itu).
+  function canvasToPngDownload(canvas, filename){
+    return new Promise((resolve, reject)=>{
+      canvas.toBlob(async blob=>{
+        if(!blob){ reject(new Error('no-blob')); return; }
+        try{
+          if(await offerDownload(filename, blob)){ resolve(); return; }
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob); a.download = filename;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(()=> URL.revokeObjectURL(a.href), 4000);
+          resolve();
+        }catch(err){ reject(err); }
+      }, 'image/png');
+    });
+  }
+
+  // Unduh barcode satu siswa sebagai file PNG tersendiri.
+  async function downloadStudentBarcodePng(s){
+    if(!(window.QRCode && QRCode.toCanvas)){ flash('Pustaka barcode belum siap. Muat ulang halaman lalu coba lagi.', 'err'); return; }
+    try{
+      const qr = await qrToCanvas(s.id, 300);
+      const canvas = document.createElement('canvas');
+      canvas.width = 340; canvas.height = 400;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#EEF2E7'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      drawBarcodeCard(ctx, s, qr, 10, 10, 320, 380);
+      await canvasToPngDownload(canvas, `barcode-${(s.nama||s.id).replace(/[^a-z0-9]+/gi,'-')}.png`);
+    }catch(e){
+      flash('Gagal membuat barcode untuk '+s.nama+'.', 'err');
+    }
+  }
+
+  // Unduh satu gambar PNG berisi mosaik kartu barcode SEMUA siswa
+  // (pengganti "Cetak Kartu Barcode" yang lama, karena jendela print sering
+  // gagal/diblokir di banyak browser mobile).
+  $('#printCardsBtn').addEventListener('click', async ()=>{
+    if(!students.length){ flash('Belum ada siswa untuk diunduh.', 'warn'); return; }
+    if(!(window.QRCode && QRCode.toCanvas)){ flash('Pustaka barcode belum siap. Muat ulang halaman lalu coba lagi.', 'err'); return; }
+    flash('Menyiapkan gambar barcode…', 'ok');
+    try{
+      const cardW = 250, cardH = 300, gap = 16, pad = 24, headH = 56, cols = Math.max(1, Math.min(4, Math.ceil(Math.sqrt(students.length))));
+      const rows = Math.ceil(students.length / cols);
+      const canvas = document.createElement('canvas');
+      canvas.width = pad*2 + cols*cardW + (cols-1)*gap;
+      canvas.height = pad*2 + headH + rows*cardH + (rows-1)*gap;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#EEF2E7'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#1E2A22'; ctx.textAlign = 'left';
+      ctx.font = '700 22px "Space Grotesk", sans-serif';
+      ctx.fillText('Kartu Barcode Presensi Siswa', pad, pad + 26);
+      for(let i=0;i<students.length;i++){
+        const s = students[i];
+        const qr = await qrToCanvas(s.id, 220);
+        const col = i % cols, row = Math.floor(i / cols);
+        const x = pad + col*(cardW+gap), y = pad + headH + row*(cardH+gap);
+        drawBarcodeCard(ctx, s, qr, x, y, cardW, cardH);
+      }
+      canvasToPngDownload(canvas, 'kartu-barcode-presensi-siswa.png').then(()=>{
+        flash('Gambar barcode berhasil diunduh.', 'ok');
+      }).catch(()=>{
+        flash('Gagal mengunduh gambar barcode. Coba lagi.', 'err');
+      });
+    }catch(e){
+      flash('Gagal membuat gambar barcode. Coba lagi.', 'err');
+    }
+  });
+
+  $('#addStudentBtn').addEventListener('click', ()=>{
+    const id = $('#inId').value.trim();
+    const nama = $('#inNama').value.trim();
+    const kelas = $('#inKelas').value.trim();
+    if(!id || !nama){ return; }
+    if(students.some(s=>s.id===id)){ alert('ID sudah dipakai siswa lain.'); return; }
+    students.push({id, nama, kelas});
+    save(); renderStudents();
+    dbSaveStudent({id, nama, kelas});
+    sheetsSyncStudents();
+    $('#inId').value=''; $('#inNama').value=''; $('#inKelas').value='';
+  });
+
+  // ---- Import Data: tambah banyak siswa sekaligus dari CSV/Excel atau tempelan teks ----
+  $('#toggleImportBtn').addEventListener('click', ()=>{
+    const panel = $('#importPanel');
+    panel.style.display = panel.style.display==='none' ? 'block' : 'none';
+  });
+  function resetImportPanel(){
+    $('#importPanel').style.display='none';
+    $('#importFile').value=''; $('#importPaste').value=''; $('#importPreview').innerHTML='';
+  }
+  $('#cancelImportBtn').addEventListener('click', resetImportPanel);
+
+  function looksLikeHeaderRow(id, nama){
+    return /^(nisn|id|no)$/i.test(id||'') && /nama/i.test(nama||'');
+  }
+  function parseImportRows(rows){
+    const out = [];
+    rows.forEach(cells=>{
+      if(!cells || !cells.length) return;
+      const id = String(cells[0]??'').trim();
+      const nama = String(cells[1]??'').trim();
+      const kelas = String(cells[2]??'').trim();
+      if(!id && !nama) return;
+      if(looksLikeHeaderRow(id, nama)) return;
+      if(!id || !nama) return;
+      out.push({id, nama, kelas});
+    });
+    return out;
+  }
+  function stripBom(text){
+    return text.charCodeAt(0) === 0xFEFF ? text.slice(1) : text;
+  }
+  function parsePastedText(text){
+    text = stripBom(text);
+    const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+    return parseImportRows(lines.map(l=> l.split(/\t|;|,/).map(s=>s.trim())));
+  }
+  // Baca file sebagai ArrayBuffer/teks dengan fallback ke FileReader, karena
+  // beberapa browser HP (webview lama, browser bawaan Android tertentu)
+  // belum mendukung File.arrayBuffer()/File.text().
+  function readFileAsArrayBuffer(file){
+    if(file.arrayBuffer) return file.arrayBuffer();
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload = ()=> resolve(reader.result);
+      reader.onerror = ()=> reject(reader.error || new Error('Gagal membaca file.'));
+      reader.readAsArrayBuffer(file);
+    });
+  }
+  function readFileAsText(file){
+    if(file.text) return file.text();
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload = ()=> resolve(reader.result);
+      reader.onerror = ()=> reject(reader.error || new Error('Gagal membaca file.'));
+      reader.readAsText(file);
+    });
+  }
+  async function readFileRows(file){
+    const isCsv = /\.csv$/i.test(file.name||'') || file.type==='text/csv';
+    if(isCsv){
+      // File CSV dibaca langsung sebagai teks (tanpa lewat pustaka Excel)
+      // supaya lebih tahan terhadap format CSV yang bervariasi dari HP.
+      const text = await readFileAsText(file);
+      return parsePastedText(text);
+    }
+    if(!window.XLSX) throw new Error('Pustaka Excel belum siap dimuat. Coba muat ulang halaman lalu ulangi.');
+    const buf = await readFileAsArrayBuffer(file);
+    if(!buf || (buf.byteLength === 0)) throw new Error('File yang dipilih kosong atau gagal terbaca sepenuhnya.');
+    const wb = XLSX.read(buf, {type:'array'});
+    if(!wb.SheetNames || !wb.SheetNames.length) throw new Error('Tidak ada sheet yang ditemukan pada file Excel ini.');
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    if(!ws) throw new Error('Sheet pertama pada file Excel ini kosong.');
+    let rows = XLSX.utils.sheet_to_json(ws, {header:1, raw:false, defval:''});
+    let parsed = parseImportRows(rows);
+    if(!parsed.length){
+      // Fallback: kalau urutan kolom bukan persis NISN/Nama/Kelas di
+      // kolom A/B/C (mis. ada kolom "No" di depan), coba cocokkan lewat
+      // NAMA kolom pada baris judul (header), apa pun urutannya.
+      const objRows = XLSX.utils.sheet_to_json(ws, {raw:false, defval:''});
+      parsed = objRows.map(o=>{
+        const keys = Object.keys(o);
+        const findKey = re => keys.find(k=> re.test(k));
+        const idKey = findKey(/nisn|no\.?\s*induk|^id$/i);
+        const namaKey = findKey(/nama/i);
+        const kelasKey = findKey(/kelas/i);
+        return { id: String(o[idKey]??'').trim(), nama: String(o[namaKey]??'').trim(), kelas: String((kelasKey?o[kelasKey]:'')??'').trim() };
+      }).filter(r=> r.id && r.nama);
+    }
+    return parsed;
+  }
+
+  let pendingImport = [];
+  $('#previewImportBtn').addEventListener('click', async ()=>{
+    let parsed;
+    try{
+      const file = $('#importFile').files[0];
+      if(file){
+        parsed = await readFileRows(file);
+      } else {
+        const text = $('#importPaste').value;
+        if(!text.trim()){ flash('Pilih file atau tempel data terlebih dahulu.', 'warn'); return; }
+        parsed = parsePastedText(text);
+      }
+    }catch(e){
+      console.error('Import gagal:', e);
+      $('#importPreview').innerHTML = `<p class="flash err" style="display:block; position:static">Gagal membaca file: ${escapeHtml(e && e.message ? e.message : String(e))}</p><p class="hint">Coba pastikan file berformat .csv/.xlsx yang valid (bukan hasil ganti nama ekstensi), atau tempel datanya secara manual di kotak teks di atas.</p>`;
+      return;
+    }
+    try{
+      if(!parsed.length){ $('#importPreview').innerHTML = '<p class="hint">Tidak ada data siswa yang valid ditemukan. Periksa urutan/nama kolom: NISN/ID, Nama, Kelas.</p>'; return; }
+      const seen = new Set(); const clean = []; let dupCount=0, existCount=0;
+      parsed.forEach(r=>{
+        if(seen.has(r.id)){ dupCount++; return; }
+        seen.add(r.id);
+        if(students.some(s=>s.id===r.id)){ existCount++; return; }
+        clean.push(r);
+      });
+      pendingImport = clean;
+      let html = `<p class="sub">Ditemukan <b>${parsed.length}</b> baris data. Siap ditambahkan: <b>${clean.length}</b> siswa.</p>`;
+      if(existCount) html += `<p class="hint">${existCount} baris dilewati karena NISN/ID sudah terdaftar.</p>`;
+      if(dupCount) html += `<p class="hint">${dupCount} baris duplikat pada data yang sama dilewati.</p>`;
+      if(clean.length){
+        html += `<div style="max-height:160px; overflow:auto; margin:8px 0; font-size:.85rem; border:1px solid #e3e8d8; border-radius:8px; padding:6px 10px">` +
+          clean.slice(0,50).map(r=>`<div>${escapeHtml(r.id)} — ${escapeHtml(r.nama)}${r.kelas ? ' · '+escapeHtml(r.kelas) : ''}</div>`).join('') +
+          (clean.length>50 ? `<div class="hint">…dan ${clean.length-50} lainnya</div>` : '') + `</div>` +
+          `<button class="btn" id="confirmImportBtn">Tambahkan ${clean.length} Siswa</button>`;
+      }
+      $('#importPreview').innerHTML = html;
+      if(clean.length){
+        $('#confirmImportBtn').addEventListener('click', ()=>{
+          students.push(...pendingImport);
+          save(); renderStudents();
+          flash(`${pendingImport.length} siswa berhasil ditambahkan.`, 'ok');
+          if(dbAvailable) Promise.all(pendingImport.map(s=>dbSaveStudent(s))).catch(()=>{});
+          sheetsSyncStudents();
+          resetImportPanel();
+          pendingImport = [];
+        });
+      }
+    }catch(e){
+      flash('Gagal membaca data import. Periksa format file/tempelan.', 'err');
+    }
+  });
+
+  $('#addCatatanBtn').addEventListener('click', ()=>{
+    const id = $('#catSiswa').value;
+    const tgl = $('#catTanggal').value;
+    const status = $('#catStatus').value;
+    const ket = $('#catKet').value.trim();
+    if(!id || !tgl){ alert('Pilih siswa dan tanggal.'); return; }
+    const rec = upsert(id, tgl, status, ket);
+    if(!rec){ alert('Siswa tidak ditemukan.'); return; }
+    $('#catKet').value='';
+    renderCatatan(); renderHistory();
+  });
+
+  $('#riwayatFilter').addEventListener('change', renderHistory);
+
+  // Scanner
+  let scanner = null;
+  function onScanSuccess(text){
+    const key = dateKey(new Date());
+    const id = text.trim();
+    const student = students.find(s=>s.id===id);
+    if(!student){ flash('ID tidak dikenali: '+id, 'err'); return; }
+    const existing = presensi.find(r=>r.id===id && r.dateKey===key && mp(r)===curMapel);
+    if(existing){ flash(student.nama+' sudah tercatat hari ini ('+STATUS_LABEL[existing.status]+').', 'warn'); return; }
+    upsert(id, key, 'H', '');
+    flash(student.nama+' berhasil absen ✔', 'ok');
+    renderToday(); renderHistory();
+  }
+
+  function cameraErrorMessage(err){
+    const name = (err && (err.name || err.message)) ? (err.name || err.message) : String(err || '');
+    if(!window.isSecureContext){
+      return 'Kamera hanya bisa diakses lewat HTTPS (atau localhost). Buka aplikasi ini melalui alamat https:// di HP Anda, bukan file:// atau http://.';
+    }
+    if(/NotAllowedError|PermissionDenied|Permission denied/i.test(name)){
+      return 'Izin kamera ditolak. Buka menu situs di browser (ikon kunci/titik tiga di address bar) → Izin → aktifkan Kamera, lalu muat ulang halaman.';
+    }
+    if(/NotFoundError|DevicesNotFoundError|OverconstrainedError/i.test(name)){
+      return 'Kamera tidak ditemukan di perangkat ini, atau tidak ada kamera yang cocok.';
+    }
+    if(/NotReadableError|TrackStartError/i.test(name)){
+      return 'Kamera sedang dipakai aplikasi lain. Tutup aplikasi kamera/video call lain lalu coba lagi.';
+    }
+    if(/SecurityError/i.test(name)){
+      return 'Akses kamera diblokir oleh pengaturan keamanan browser (coba buka di Chrome/Safari langsung, bukan di dalam browser aplikasi lain seperti WhatsApp/Instagram).';
+    }
+    return 'Tidak bisa mengakses kamera. Periksa izin kamera di browser lalu coba lagi. (' + name + ')';
+  }
+
+  $('#startBtn').addEventListener('click', async ()=>{
+    if(!window.Html5Qrcode){ flash('Pustaka kamera (Html5Qrcode) gagal dimuat. Periksa koneksi internet lalu muat ulang halaman ini.', 'err'); return; }
+    $('#startBtn').disabled = true;
+    try{
+      scanner = new Html5Qrcode('reader');
+      const config = {fps:10, qrbox:200};
+
+      // Prefer picking an explicit back-camera device id: on some Android
+      // browsers / WebViews the {facingMode:'environment'} constraint alone
+      // fails even though a rear camera exists, so we try to resolve a real
+      // device id first and fall back to facingMode if that isn't possible.
+      let cameraTarget = {facingMode:'environment'};
+      try{
+        const devices = await Html5Qrcode.getCameras();
+        if(devices && devices.length){
+          const back = devices.find(d=>/back|belakang|rear|environment/i.test(d.label||''));
+          cameraTarget = (back || devices[devices.length-1]).id;
+        }
+      }catch(e){ /* no permission/info yet: fall back to facingMode below */ }
+
+      await scanner.start(cameraTarget, config, onScanSuccess, ()=>{});
+      $('#startBtn').style.display='none'; $('#stopBtn').style.display='inline-block';
+    }catch(err){
+      console.error('Camera start failed:', err);
+      // If picking a specific device id failed, retry once with a plain
+      // environment-facing constraint before giving up.
+      try{
+        scanner = scanner || new Html5Qrcode('reader');
+        await scanner.start({facingMode:'environment'}, {fps:10, qrbox:200}, onScanSuccess, ()=>{});
+        $('#startBtn').style.display='none'; $('#stopBtn').style.display='inline-block';
+      }catch(err2){
+        console.error('Camera fallback failed:', err2);
+        flash(cameraErrorMessage(err2 || err), 'err');
+      }
+    }finally{
+      $('#startBtn').disabled = false;
+    }
+  });
+  $('#stopBtn').addEventListener('click', ()=>{
+    if(scanner){ scanner.stop().then(()=>scanner.clear()); }
+    $('#startBtn').style.display='inline-block'; $('#stopBtn').style.display='none';
+  });
+
+  async function offerDownload(filename, data){
+    try{
+      const downloads = await claude.use('downloads');
+      if(downloads){ await downloads.save({filename, data}); return true; }
+    }catch(e){}
+    return false;
+  }
+
+  // Unduh seluruh aplikasi sebagai satu file .html mandiri, dengan data
+  // siswa & presensi SAAT INI disematkan sebagai window.__SEED__, supaya
+  // file yang diunduh bisa dibuka lagi (mis. tanpa internet, atau sebagai
+  // cadangan) lengkap dengan datanya.
+  async function downloadAppHtml(){
+    try{
+      const doc = document.documentElement.cloneNode(true);
+      const seedEl = doc.querySelector('#__seedScript');
+      if(seedEl){ seedEl.textContent = 'window.__SEED__=' + JSON.stringify({students, presensi}) + ';'; }
+      const html = '<!DOCTYPE html>\n' + doc.outerHTML;
+      const blob = new Blob([html], {type:'text/html'});
+      if(await offerDownload('presensi-siswa.html', blob)){ flash('Aplikasi berhasil diunduh.', 'ok'); return; }
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'presensi-siswa.html';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=> URL.revokeObjectURL(a.href), 4000);
+      flash('Aplikasi berhasil diunduh.', 'ok');
+    }catch(e){
+      flash('Gagal mengunduh aplikasi. Coba lagi.', 'err');
+    }
+  }
+
+  // Export CSV
+  $('#exportBtn').addEventListener('click', async ()=>{
+    const rows = filteredHistory();
+    const table = [['Tanggal','Waktu','ID','Nama','Kelas','Status','Keterangan'], ...rows.map(a=>[a.dateKey,a.time,a.id,a.nama,a.kelas||'',STATUS_LABEL[a.status]||a.status,a.ket||''])];
+    const csv = table.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+    if(await offerDownload('riwayat-presensi.csv', csv)) return;
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'riwayat-presensi.csv'; a.click();
+  });
+
+  // Excel export
+  $('#exportExcelBtn').addEventListener('click', async ()=>{
+    if(!window.XLSX){ flash('Pustaka Excel gagal dimuat.', 'err'); return; }
+    const rows = filteredHistory().map(a=>({Tanggal:a.dateKey, Waktu:a.time, ID:a.id, Nama:a.nama, Kelas:a.kelas||'', Status:STATUS_LABEL[a.status]||a.status, Keterangan:a.ket||''}));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Presensi');
+    const arrayBuf = XLSX.write(wb, {bookType:'xlsx', type:'array'});
+    if(await offerDownload('riwayat-presensi.xlsx', new Blob([arrayBuf]))) return;
+    const blob = new Blob([arrayBuf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'riwayat-presensi.xlsx'; a.click();
+  });
+
+  // CSS dipakai baik untuk jendela cetak (printHtml) maupun untuk
+  // merender PDF secara langsung (downloadPdf).
+  const PRINT_CSS = `
+      @page{ size: landscape; margin: 12mm; }
+      body{ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#000; margin:0; padding:0 4px; background:#fff; }
+      h2{ font-family:"Space Grotesk",sans-serif; margin-bottom:2px; }
+      table{ width:100%; border-collapse:collapse; }
+      th,td{ border:1px solid #999; padding:6px 8px; font-size:.85rem; }
+      #rkTable th,#rkTable td{ padding:3px 2px; font-size:.68rem; text-align:center; }
+      #rkTable th.name,#rkTable td.name{ text-align:left; padding-left:6px; font-size:.75rem; }
+      .rekapHead{ text-align:center; margin-bottom:14px; }
+      .rekapHead h2{ margin:0; font-size:1.15rem; }
+      .rekapHead p{ margin:2px 0; }
+      .sig{ display:flex; justify-content:space-between; margin-top:50px; font-size:.9rem; }
+      .sig .block{ width:45%; text-align:center; }
+      .sig .space{ height:60px; }
+      .cardsGrid{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+      .barcodeCard{ width:170px; border:1px dashed #999; border-radius:6px; padding:10px; text-align:center; page-break-inside:avoid; }
+      .barcodeCard img{ display:block; margin:0 auto 6px; }
+      .barcodeCard .bcName{ font-weight:700; font-size:.85rem; }
+      .barcodeCard .bcMeta{ font-size:.72rem; color:#333; }
+      .sig .name{ font-weight:700; text-decoration:underline; }
+  `;
+
+  // Print helper: opens the printable content in a fresh window/tab and
+  // prints it there. Kept as a fallback for browsers/devices where the
+  // direct PDF download below can't run (e.g. no internet to load the
+  // PDF libraries).
+  function printHtml(title, node){
+    const w = window.open('', '_blank');
+    if(!w){
+      flash('Popup diblokir oleh browser. Izinkan popup untuk situs ini lalu coba lagi.', 'err');
+      return;
+    }
+    const clone = node.cloneNode(true);
+    clone.style.display = 'block';
+    w.document.open();
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escapeHtml(title)}</title><style>${PRINT_CSS}</style></head><body><div id="printScaleWrap">${clone.outerHTML}</div></body></html>`);
+    w.document.close();
+    let printed = false;
+    // Kalau konten lebih panjang dari satu halaman, kecilkan skalanya
+    // (bukan dipotong ke halaman berikutnya) supaya dokumen tetap tercetak
+    // dalam satu halaman utuh.
+    const fitOnePage = ()=>{
+      try{
+        const wrap = w.document.getElementById('printScaleWrap');
+        if(!wrap) return;
+        const pxPerMm = 96/25.4;
+        const pageAvailH = (210 - 24) * pxPerMm; // A4 lanskap: tinggi 210mm dikurangi margin 12mm x2
+        const contentH = wrap.scrollHeight;
+        if(contentH > pageAvailH){
+          const scale = pageAvailH / contentH;
+          wrap.style.transformOrigin = 'top left';
+          wrap.style.transform = `scale(${scale})`;
+          wrap.style.width = (100/scale) + '%';
+        }
+      }catch(e){}
+    };
+    const doPrint = ()=>{ if(printed) return; printed = true; fitOnePage(); try{ w.focus(); w.print(); }catch(e){} };
+    w.onload = ()=> setTimeout(doPrint, 200);
+    setTimeout(doPrint, 800); // fallback in case onload never fires
+  }
+
+  // Langsung membuat file PDF dan menyimpannya ke HP (tanpa lewat dialog
+  // cetak sistem), karena di banyak browser HP dialog cetak/"Save as PDF"
+  // tidak berjalan otomatis atau memerlukan langkah tambahan yang mudah
+  // terlewat oleh pengguna. Mengembalikan true jika berhasil.
+  async function downloadPdf(filename, title, node){
+    if(!window.html2canvas || !window.jspdf){
+      return false; // pemanggil akan jatuh ke printHtml() sebagai cadangan
+    }
+    const clone = node.cloneNode(true);
+    clone.style.display = 'block';
+
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'position:fixed; left:-10000px; top:0; width:1200px; height:10px; border:0;';
+    document.body.appendChild(iframe);
+
+    try{
+      const doc = iframe.contentDocument;
+      doc.open();
+      doc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escapeHtml(title)}</title><style>${PRINT_CSS}</style></head><body>${clone.outerHTML}</body></html>`);
+      doc.close();
+
+      await new Promise(res=>{
+        if(doc.readyState==='complete') res();
+        else iframe.addEventListener('load', ()=>res(), {once:true});
+        setTimeout(res, 600); // jaga-jaga kalau load tidak pernah terpicu
+      });
+
+      const body = doc.body;
+      iframe.style.height = Math.max(body.scrollHeight, 10) + 'px';
+
+      const canvas = await html2canvas(body, {scale:2, backgroundColor:'#ffffff', windowWidth:1200});
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+
+      // Selalu dijadikan SATU halaman: lebar kertas mengikuti lebar kertas
+      // A4 lanskap, tapi TINGGI halaman menyesuaikan panjang konten (tabel
+      // rekap yang banyak baris/kolom) alih-alih memotongnya ke halaman
+      // berikutnya seperti perilaku bawaan dialog cetak/print pada umumnya.
+      const marginPt = 24;
+      const pageWidthPt = 841.89; // lebar kertas A4 posisi lanskap
+      const contentWidthPt = pageWidthPt - marginPt*2;
+      const ratio = canvas.height / canvas.width;
+      const contentHeightPt = contentWidthPt * ratio;
+      const pageHeightPt = contentHeightPt + marginPt*2;
+      const orientation = pageHeightPt >= pageWidthPt ? 'portrait' : 'landscape';
+      const pdf = new jsPDF({orientation, unit:'pt', format:[pageWidthPt, pageHeightPt]});
+      pdf.addImage(imgData, 'PNG', marginPt, marginPt, contentWidthPt, contentHeightPt);
+
+      const blob = pdf.output('blob');
+      if(await offerDownload(filename, blob)) return true;
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+      return true;
+    }catch(e){
+      console.error('PDF generation failed:', e);
+      return false;
+    }finally{
+      document.body.removeChild(iframe);
+    }
+  }
+
+  // Print / PDF (landscape) - Riwayat
+  $('#printBtn').addEventListener('click', async ()=>{
+    const rows = filteredHistory();
+    $('#printBody').innerHTML = rows.map(historyRowHtml).join('');
+    $('#printFoot').innerHTML = rows.length ? footRowHtml(countStatus(rows)) : '';
+    $('#printMeta').textContent = 'Dicetak pada '+todayStr()+' · Total '+rows.length+' entri';
+    const btn = $('#printBtn'); btn.disabled = true;
+    try{
+      const ok = await downloadPdf('riwayat-presensi.pdf', 'Rekap Presensi Siswa', document.getElementById('printArea'));
+      if(ok){ flash('PDF berhasil disimpan.', 'ok'); }
+      else{ printHtml('Rekap Presensi Siswa', document.getElementById('printArea')); }
+    }finally{ btn.disabled = false; }
+  });
+
+  // ---- Rekap Bulanan ----
+  // Data profil (nama guru, kepsek, tempat pengesahan, tahun ajaran, bulan
+  // presensi, kelas yang diampu, dst) disimpan supaya tidak perlu diisi ulang
+  // setiap kali membuka aplikasi lagi — nilai terakhir yang dipilih pengguna
+  // selalu jadi nilai yang tersimpan. Hanya Tanggal Pengesahan yang sengaja
+  // TIDAK disimpan, karena itu memang seharusnya mengikuti tanggal saat ini.
+  const REKAP_SETTINGS_KEY = 'presensi_rekap_settings';
+  function saveGuru(){ try{ localStorage.setItem('presensi_guru_'+curMapel, JSON.stringify({n:$('#rkNamaGuru').value,s:$('#rkStatusGuru').value,no:$('#rkNomorGuru').value})); }catch(e){} }
+  function loadRekapSettings(){
+    try{ return JSON.parse(localStorage.getItem(REKAP_SETTINGS_KEY) || 'null') || {}; }
+    catch(e){ return {}; }
+  }
+  function saveRekapSettings(){
+    const taSel = $('#rkTahunAjaran');
+    const data = {
+      tahunAjaran: taSel.value,
+      tahunAjaranManual: $('#rkTahunAjaranManual').value.trim(),
+      bulan: $('#rkBulan').value,
+      kelas: $('#rkKelas').value,
+      namaGuru: $('#rkNamaGuru').value.trim(),
+      statusGuru: $('#rkStatusGuru').value,
+      nomorGuru: $('#rkNomorGuru').value.trim(),
+      namaKepsek: $('#rkNamaKepsek').value.trim(),
+      nipKepsek: $('#rkNipKepsek').value.trim(),
+      tempat: $('#rkTempat').value.trim(),
+    };
+    try{ localStorage.setItem(REKAP_SETTINGS_KEY, JSON.stringify(data)); }catch(e){}
+    saveGuru();
+    return data;
+  }
+  function applyRekapSettings(data){
+    if(!data) return;
+    if(data.namaGuru !== undefined) $('#rkNamaGuru').value = data.namaGuru;
+    if(data.statusGuru) $('#rkStatusGuru').value = data.statusGuru;
+    if(data.nomorGuru !== undefined) $('#rkNomorGuru').value = data.nomorGuru;
+    if(data.namaKepsek !== undefined) $('#rkNamaKepsek').value = data.namaKepsek;
+    if(data.nipKepsek !== undefined) $('#rkNipKepsek').value = data.nipKepsek;
+    if(data.tempat) $('#rkTempat').value = data.tempat;
+  }
+  let rekapSettingsLoaded = false;
+
+  function renderRekapForm(){
+    const taSel = $('#rkTahunAjaran');
+    const saved = loadRekapSettings();
+    // Catatan: sebelumnya kode ini memakai penanda `data-filled` yang sama
+    // dengan salah satu atribut yang ikut "terbekukan" ke dalam file lewat
+    // fitur unduh lama, sehingga nilai Tahun Ajaran tersimpan tidak pernah
+    // diterapkan. Dipisah jadi dua penanda baru supaya selalu berjalan.
+    if(!taSel.dataset.optionsFilled){
+      const y = new Date().getFullYear();
+      let opts = '';
+      for(let i=-2;i<=2;i++){ opts += `<option value="${y+i}/${y+i+1}">${y+i}/${y+i+1}</option>`; }
+      opts += `<option value="__manual">Lainnya (isi manual)</option>`;
+      taSel.innerHTML = opts;
+      taSel.dataset.optionsFilled = '1';
+    }
+    if(!taSel.dataset.valueApplied){
+      const y = new Date().getFullYear();
+      taSel.value = saved.tahunAjaran || `${y}/${y+1}`;
+      taSel.dataset.valueApplied = '1';
+    }
+    taSel.onchange = ()=>{ $('#rkTahunAjaranManualWrap').style.display = taSel.value==='__manual' ? 'block':'none'; };
+    if(taSel.value==='__manual'){
+      $('#rkTahunAjaranManualWrap').style.display = 'block';
+      if(!$('#rkTahunAjaranManual').value && saved.tahunAjaranManual) $('#rkTahunAjaranManual').value = saved.tahunAjaranManual;
+    }
+    if(!$('#rkBulan').dataset.valueApplied){
+      $('#rkBulan').value = saved.bulan || dateKey(new Date()).slice(0,7);
+      $('#rkBulan').dataset.valueApplied = '1';
+    }
+    if(!$('#rkTanggal').value){ $('#rkTanggal').value = dateKey(new Date()); $('#rkTanggal').dataset.auto = '1'; }
+    const kelasSel = $('#rkKelas');
+    const prevVal = kelasSel.value;
+    const kelasList = [...new Set(students.map(s=>s.kelas).filter(Boolean))];
+    kelasSel.innerHTML = `<option value="">Semua Kelas</option>` + kelasList.map(k=>`<option value="${escapeHtml(k)}">${escapeHtml(formatKelasLabel(k))}</option>`).join('');
+    // Pertahankan kelas yang sudah dipilih guru sebelumnya dalam sesi ini.
+    // Kalau belum pernah memilih di sesi ini, pakai kelas yang tersimpan dari
+    // sesi sebelumnya; kalau itu juga tidak ada dan siswa yang terdaftar
+    // semuanya dari satu kelas saja, pilih otomatis kelas itu.
+    if(!kelasSel.dataset.valueApplied && kelasList.includes(saved.kelas)){
+      kelasSel.value = saved.kelas;
+    } else if(kelasList.includes(prevVal)){
+      kelasSel.value = prevVal;
+    } else if(kelasList.length === 1){
+      kelasSel.value = kelasList[0];
+    }
+    kelasSel.dataset.valueApplied = '1';
+    // Isi data guru/kepsek/tempat yang tersimpan hanya sekali, saat aplikasi
+    // pertama kali dibuka/dimuat ulang, supaya tidak menimpa perubahan yang
+    // sedang diketik pengguna saat berpindah tab di sesi yang sama.
+    if(!rekapSettingsLoaded){
+      applyRekapSettings(saved);
+      rekapSettingsLoaded = true;
+    }
+  }
+
+  // Simpan otomatis setiap kali salah satu field profil ini diubah, supaya
+  // data tidak hilang meski pengguna lupa menekan tombol "Simpan".
+  ['rkNamaGuru','rkStatusGuru','rkNomorGuru','rkNamaKepsek','rkNipKepsek','rkTempat','rkTahunAjaran','rkTahunAjaranManual','rkKelas','rkBulan'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('change', saveRekapSettings);
+  });
+  ['rkNamaGuru','rkNomorGuru','rkNamaKepsek','rkNipKepsek','rkTempat','rkTahunAjaranManual'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('blur', saveRekapSettings);
+  });
+
+  $('#saveRekapSettingsBtn').addEventListener('click', ()=>{
+    saveRekapSettings();
+    flash('Data guru & kepala sekolah tersimpan. Tidak akan kembali kosong lagi.', 'ok');
+  });
+
+  $('#printRekapBtn').addEventListener('click', async ()=>{
+    saveRekapSettings();
+    const bulan = $('#rkBulan').value; // YYYY-MM
+    if(!bulan){ alert('Pilih bulan presensi.'); return; }
+    const [yy, mm] = bulan.split('-');
+    const namaBulan = BULAN_ID[parseInt(mm,10)-1];
+    const kelas = $('#rkKelas').value;
+    const taSel = $('#rkTahunAjaran');
+    const tahunAjaran = taSel.value==='__manual' ? ($('#rkTahunAjaranManual').value.trim()||'-') : taSel.value;
+
+    const list = students.filter(s=> !kelas || s.kelas===kelas);
+    const recs = presensi.filter(r=>r.dateKey.startsWith(bulan) && mp(r)===curMapel);
+    const daysInMonth = new Date(parseInt(yy,10), parseInt(mm,10), 0).getDate();
+    const pad2 = n => String(n).padStart(2,'0');
+    const dayList = curMapel==='HARIAN' ? Array.from({length:daysInMonth},(_,i)=>i+1) : [...new Set(recs.filter(r=>!kelas||r.kelas===kelas).map(r=>parseInt(r.dateKey.slice(8),10)))].sort((a,b)=>a-b);
+
+    $('#rkTitle').innerHTML = `Rekapitulasi Presensi ${curMapel==='HARIAN'?'':curMapel+' '}UPTD SPF SD Negeri Lanas 1<br>Tahun Ajaran ${escapeHtml(tahunAjaran)}`;
+    $('#rkSubTitle').textContent = `Kelas: ${kelas ? formatKelasLabel(kelas) : 'Semua Kelas'}`;
+    $('#rkSubTitle2').textContent = `Bulan: ${namaBulan} ${yy}`;
+
+    // Header row: No, Nama, day 1..N, then H/I/S/A totals + % Hadir
+    let head = `<th class="no">No</th><th class="name">Nama Siswa</th>`;
+    for(const d of dayList){ head += `<th class="day">${d}</th>`; }
+    head += `<th class="tot">H</th><th class="tot">I</th><th class="tot">S</th><th class="tot">A</th><th class="tot">%H</th>`;
+    $('#rkHeadRow').innerHTML = head;
+
+    let totH=0, totI=0, totS=0, totA=0;
+    const dayTally = {}; // Hadir per day
+    const body = list.map((s,i)=>{
+      const own = recs.filter(r=>r.id===s.id);
+      const c = countStatus(own);
+      totH+=c.H; totI+=c.I; totS+=c.S; totA+=c.A;
+      const p = attendancePct(c);
+      let dayCells = '';
+      for(const d of dayList){
+        const dk = `${yy}-${mm}-${pad2(d)}`;
+        const rec = own.find(r=>r.dateKey===dk);
+        dayTally[d]=(dayTally[d]||0)+((rec && rec.status==='H')?1:0);
+        dayCells += `<td class="day">${rec ? rec.status : ''}</td>`;
+      }
+      return `<tr><td class="no">${i+1}</td><td class="name">${escapeHtml(s.nama)}</td>${dayCells}<td class="tot">${c.H}</td><td class="tot">${c.I}</td><td class="tot">${c.S}</td><td class="tot">${c.A}</td><td class="tot">${p.pct}%</td></tr>`;
+    }).join('');
+    $('#rkBody').innerHTML = body || `<tr><td colspan="${dayList.length+7}" style="text-align:center">Tidak ada siswa pada kelas ini.</td></tr>`;
+    const classCounts = {H:totH, I:totI, S:totS, A:totA};
+    const classPct = attendancePct(classCounts);
+    if(list.length){
+      let footCells = dayList.map(d=>`<td class="day">${dayTally[d]||0}</td>`).join('');
+      $('#rkFoot').innerHTML = `<tr><td class="no"></td><td class="name">Jumlah hadir/hari</td>${footCells}<td class="tot">${totH}</td><td class="tot">${totI}</td><td class="tot">${totS}</td><td class="tot">${totA}</td><td class="tot">${classPct.pct}%</td></tr>`;
+    } else {
+      $('#rkFoot').innerHTML = '';
+    }
+
+    if(curMapel!=='HARIAN' && !kelas && list.length){
+      const ks=[...new Set(list.map(x=>x.kelas||'-'))].sort((a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true}));
+      const T=v=>`<td class="tot">${v}</td>`;
+      $('#rkHeadRow').innerHTML='<th class="no">No</th><th class="name">Kelas</th><th class="tot">Pert.</th><th class="tot">Siswa</th><th class="tot">H</th><th class="tot">I</th><th class="tot">S</th><th class="tot">A</th><th class="tot">%H</th>';
+      $('#rkBody').innerHTML=ks.map((k,i)=>{const rr=recs.filter(r=>(r.kelas||'-')===k),c=countStatus(rr);return `<tr><td class="no">${i+1}</td><td class="name">${escapeHtml(formatKelasLabel(k))}</td>${T(new Set(rr.map(r=>r.dateKey)).size)}${T(list.filter(x=>(x.kelas||'-')===k).length)}${T(c.H)}${T(c.I)}${T(c.S)}${T(c.A)}${T(attendancePct(c).pct+'%')}</tr>`;}).join('');
+      $('#rkFoot').innerHTML=`<tr><td class="no"></td><td class="name">Total</td>${T('')}${T(list.length)}${T(totH)}${T(totI)}${T(totS)}${T(totA)}${T(classPct.pct+'%')}</tr>`;
+    }
+    const summaryText = list.length ? `Persentase kehadiran kelas: ${classPct.pct}% (dari ${classPct.total} entri tercatat)` : 'Belum ada data untuk dihitung.';
+    const summaryChart = list.length ? barChartSVG(classCounts) : '';
+    $('#rekapPct').textContent = summaryText;
+    $('#rekapChart').innerHTML = summaryChart;
+    $('#rekapPreview').style.display = 'block';
+    $('#rkPctPrint').textContent = summaryText;
+    $('#rkChartPrint').innerHTML = summaryChart;
+
+    const statusGuru = $('#rkStatusGuru').value;
+    const nomorGuru = $('#rkNomorGuru').value.trim() || '-';
+    $('#rkSigRole').textContent = curMapel==='HARIAN' ? 'Guru Kelas' : 'Guru '+curMapel;
+    $('#rkSigGuruName').textContent = $('#rkNamaGuru').value.trim() || '-';
+    $('#rkSigGuruNip').textContent = `${statusGuru}. ${nomorGuru}`;
+    $('#rkSigKepsekName').textContent = $('#rkNamaKepsek').value.trim() || '-';
+    $('#rkSigKepsekNip').textContent = `NIP. ${$('#rkNipKepsek').value.trim() || '-'}`;
+    const tgl = $('#rkTanggal').value ? new Date($('#rkTanggal').value+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
+    $('#rkSigPlace').textContent = `${$('#rkTempat').value.trim()||'-'}, ${tgl}`;
+
+    $('#printRekapBtn').disabled = true;
+    try{
+      const ok = await downloadPdf('rekapitulasi-bulanan.pdf', 'Rekapitulasi Presensi Bulanan', document.getElementById('printAreaRekap'));
+      if(ok){ flash('PDF berhasil disimpan.', 'ok'); }
+      else{ printHtml('Rekapitulasi Presensi Bulanan', document.getElementById('printAreaRekap')); }
+    }finally{ $('#printRekapBtn').disabled = false; }
+  });
+
+  // Kalau pengguna mengganti tanggal ini secara manual, lepaskan tanda
+  // "otomatis" supaya pergantian hari tidak menimpa pilihan manual tsb.
+  $('#catTanggal').addEventListener('input', ()=>{ delete $('#catTanggal').dataset.auto; });
+  $('#rkTanggal').addEventListener('input', ()=>{ delete $('#rkTanggal').dataset.auto; });
+
+  // Aplikasi ini bisa saja dibiarkan terbuka lewat tengah malam (mis. HP
+  // ditinggal di kelas). Tanpa pengecekan ini, label tanggal & isian tanggal
+  // otomatis (Catat Ijin/Sakit/Alpa, Tanggal Pengesahan) akan tetap
+  // menunjukkan tanggal kemarin sampai halaman dibuka ulang manual.
+  let lastKnownDateKey = dateKey(new Date());
+  function refreshForNewDay(){
+    const nowKey = dateKey(new Date());
+    if(nowKey === lastKnownDateKey) return;
+    lastKnownDateKey = nowKey;
+    $('#todayLabel').textContent = todayStr();
+    if($('#catTanggal').dataset.auto === '1'){ $('#catTanggal').value = nowKey; }
+    if($('#rkTanggal').dataset.auto === '1'){ $('#rkTanggal').value = nowKey; }
+    renderToday();
+    renderHistory();
+  }
+  document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) refreshForNewDay(); });
+  window.addEventListener('focus', refreshForNewDay);
+  setInterval(refreshForNewDay, 60*1000);
+
+  $('#mapelSel').addEventListener('change', ()=>{
+    saveRekapSettings();
+    curMapel = $('#mapelSel').value;
+    let g={}; try{ g=JSON.parse(localStorage.getItem('presensi_guru_'+curMapel)||'{}'); }catch(e){}
+    $('#rkNamaGuru').value=g.n||''; $('#rkNomorGuru').value=g.no||''; if(g.s) $('#rkStatusGuru').value=g.s;
+    renderToday(); renderHistory();
+    if($('#view-catatan').classList.contains('active')) renderCatatan();
+    if($('#view-rekap').classList.contains('active')) renderRekapForm();
+    $('#rekapHeading').textContent='Cetak Rekapitulasi Bulanan — '+(curMapel==='HARIAN'?'Harian (Guru Kelas)':'Guru '+curMapel);
+    $('#rkNamaGuru').placeholder=curMapel==='HARIAN'?'Nama guru kelas':'Nama guru '+curMapel;
+    flash('Presensi untuk: '+(curMapel==='HARIAN'?'Harian (Guru Kelas)':curMapel),'ok');
+  });
+  renderToday(); renderHistory(); renderStudents();
+  initDb();
+  (function initSheetsUi(){
+    const cfg = sheetsCfg();
+    $('#shUrl').value = cfg.url||''; $('#shToken').value = cfg.token||'';
+    if(cfg.url) setShStatus('Tersambung ke Google Sheets.');
+    $('#shSaveBtn').addEventListener('click', ()=>{
+      const url = $('#shUrl').value.trim();
+      if(url && !/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)){ flash('Alamat harus dari Apps Script dan berakhiran /exec.', 'err'); return; }
+      try{ localStorage.setItem(SHEETS_CFG_KEY, JSON.stringify({url, token:$('#shToken').value.trim()})); }catch(e){}
+      setShStatus(url ? 'Tersimpan. Tekan "Tes Koneksi", lalu "Kirim Semua Data" untuk mengirim data yang sudah ada.' : 'Belum tersambung.');
+      flash(url ? 'Pengaturan Google Sheets tersimpan.' : 'Sinkronisasi Google Sheets dimatikan.', 'ok');
+    });
+    $('#shTestBtn').addEventListener('click', async ()=>{
+      if(!sheetsCfg().url){ flash('Simpan alamat Web App terlebih dahulu.', 'warn'); return; }
+      setShStatus('Menguji koneksi…');
+      const res = await sheetsPost({action:'ping'});
+      if(res.ok && !res.opaque){ setShStatus('Koneksi berhasil ✔'); flash('Terhubung ke Google Sheets.', 'ok'); }
+      else if(res.ok){ setShStatus('Permintaan terkirim, tetapi balasan tidak bisa dibaca browser. Kirim data lalu cek Sheet-nya.'); flash('Terkirim — cek Google Sheets Anda.', 'warn'); }
+      else { setShStatus('Gagal: '+(res.msg||'tidak diketahui')); flash('Gagal terhubung: '+(res.msg||'periksa alamat & koneksi'), 'err'); }
+    });
+    $('#shSyncAllBtn').addEventListener('click', async ()=>{
+      if(!sheetsCfg().url){ flash('Simpan alamat Web App terlebih dahulu.', 'warn'); return; }
+      setShStatus('Mengirim semua data…');
+      await sheetsQueueAll();
+    });
+    window.addEventListener('online', ()=> sheetsFlush());
+    setInterval(()=>{ const p = sheetsPending(); if(sheetsCfg().url && (p.students || p.days.length)) sheetsFlush(); }, 120000);
+    sheetsFlush();
+  })();
+
+})();
+</script>
+
+
+</body></html>
