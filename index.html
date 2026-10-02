@@ -153,6 +153,7 @@ window.QRCode = (function(){
     box-shadow:var(--shadow-lg); z-index:50;
   }
   #printArea, #printAreaRekap{display:none;}
+  @page{ size: A4 landscape; margin:12mm; }
   @media print{
     header, nav, #view-scan .card:first-child, .actions, .card > .row, .card > .field, #catatanForm, #rekapForm{display:none !important;}
     body{background:#fff; color:#000;}
@@ -160,7 +161,6 @@ window.QRCode = (function(){
     body.mode-rekap #printArea{display:none !important;}
     body.mode-riwayat #printArea{display:block; padding:0 4px;}
     body.mode-rekap #printAreaRekap{display:block; padding:0 4px;}
-    @page{ size: landscape; margin:12mm; }
     #printArea h2, #printAreaRekap h2{font-family:"Space Grotesk",sans-serif; margin-bottom:2px;}
     #printArea table, #printAreaRekap table{width:100%; border-collapse:collapse;}
     #printArea th,#printArea td,#printAreaRekap th,#printAreaRekap td{border:1px solid #999; padding:6px 8px; font-size:.85rem;}
@@ -308,6 +308,10 @@ window.QRCode = (function(){
           <input type="month" id="riwayatFilter">
         </div>
       </div>
+      <div class="field" style="margin:10px 0 0">
+        <label class="lbl">Cetak untuk</label>
+        <select id="rwGuruPilih"></select>
+      </div>
       <div class="actions" style="margin:6px 0 0">
         <button class="btn ghost" id="exportBtn">Unduh CSV</button>
         <button class="btn ghost" id="exportExcelBtn">Unduh Excel</button>
@@ -330,6 +334,10 @@ window.QRCode = (function(){
   <section class="view" id="view-rekap">
     <div class="card" id="rekapForm">
       <h3 style="margin:0 0 10px" id="rekapHeading">Cetak Rekapitulasi Bulanan — Harian (Guru Kelas)</h3>
+      <div class="field">
+        <label class="lbl">Cetak untuk</label>
+        <select id="rkGuruPilih"></select>
+      </div>
       <div class="row">
         <div class="field">
           <label class="lbl">Tahun Ajaran</label>
@@ -574,6 +582,13 @@ window.QRCode = (function(){
       return {students:!!p.students, days:p.days||[], delStudents:p.delStudents||[], delRecs:p.delRecs||[]};
     }catch(e){ return {students:false, days:[], delStudents:[], delRecs:[]}; }
   }
+  // Catatan presensi yang diubah di perangkat ini dan belum terkirim: kunci "tanggal|mapel|id".
+  // Dipakai saat menggabungkan dengan data server, agar perubahan lokal menang
+  // sedangkan catatan perangkat lain tidak ikut tertimpa.
+  const DIRTY_KEY = 'presensi_dirty_ids';
+  function dirtySet(){ try{ return new Set(JSON.parse(localStorage.getItem(DIRTY_KEY)||'[]')); }catch(e){ return new Set(); } }
+  function saveDirty(st){ try{ localStorage.setItem(DIRTY_KEY, JSON.stringify([...st])); }catch(e){} }
+  function markDirty(dk, mapel, id){ const st = dirtySet(); st.add(dk+'|'+mapel+'|'+id); saveDirty(st); }
   function setPending(p){ try{ localStorage.setItem(SHEETS_PENDING_KEY, JSON.stringify(p)); }catch(e){} }
   function hasPending(){ const p = sheetsPending(); return p.students || p.days.length || p.delStudents.length || p.delRecs.length; }
   function setShStatus(msg){ const el = $('#shStatus'); if(el) el.textContent = msg; }
@@ -611,6 +626,29 @@ window.QRCode = (function(){
     }catch(e){ return {ok:false, msg:'offline'}; }
   }
 
+  // Ambil catatan server untuk satu tanggal+mapel dan gabungkan ke data lokal:
+  // catatan yang belum ada di perangkat ini ditambahkan; catatan yang sama diambil dari server
+  // kecuali perangkat ini baru mengubahnya (dirty). Tidak pernah menghapus catatan lokal.
+  async function mergeServerDay(dk, mapel){
+    const rp = await sheetsGet({action:'presensi', from:dk});
+    if(!rp.ok) return false;
+    const dirty = dirtySet();
+    const delSet = new Set(sheetsPending().delRecs.map(d=>d.dk+'|'+d.mapel+'|'+d.id));
+    const list = presensiByDate[dk] = presensiByDate[dk]||[];
+    let changed = false;
+    (rp.data.records||[]).forEach(r=>{
+      if(r.dateKey!==dk || (r.mapel||'HARIAN')!==mapel) return;
+      const id = String(r.id), key = dk+'|'+mapel+'|'+id;
+      if(delSet.has(key)) return;
+      const cur = list.find(t=>String(t.id)===id && mp(t)===mapel);
+      const nv = {id, mapel, nama:r.nama||'', kelas:r.kelas||'', time:r.time||'-', status:r.status, ket:r.ket||'', oleh:r.oleh||''};
+      if(!cur){ list.push(nv); changed = true; }
+      else if(!dirty.has(key)) ['nama','kelas','time','status','ket','oleh'].forEach(k=>{ if((cur[k]||'')!==(nv[k]||'')){ cur[k] = nv[k]; changed = true; } });
+    });
+    if(changed){ rebuildPresensiFromByDate(); save(); renderToday(); renderHistory(); }
+    return true;
+  }
+
   let sheetsFlushing = false, sheetsAgain = false;
   const sheetsRedirtied = new Set();
   async function sheetsFlush(){
@@ -632,12 +670,14 @@ window.QRCode = (function(){
         }
         for(const key of [...sheetsPending().days]){
           const sep = key.indexOf('|'), dk = key.slice(0,sep), mapel = key.slice(sep+1);
+          await mergeServerDay(dk, mapel); // gabungkan catatan perangkat lain dulu, supaya tidak tertimpa
           const records = (presensiByDate[dk]||[]).filter(r=>(r.mapel||'HARIAN')===mapel)
             .map(r=>({id:r.id, nama:r.nama, kelas:r.kelas||'', time:r.time||'-', status:r.status, ket:r.ket||'', oleh:r.oleh||''}));
           sheetsRedirtied.delete(key);
           const res = await sheetsPost({action:'syncDay', dateKey:dk, mapel, records});
           if(!res.ok){ sheetsFail(res); return; }
-          if(!sheetsRedirtied.has(key)){ const q = sheetsPending(); q.days = q.days.filter(k=>k!==key); setPending(q); }
+          if(!sheetsRedirtied.has(key)){ const q = sheetsPending(); q.days = q.days.filter(k=>k!==key); setPending(q);
+            const dst = dirtySet(); [...dst].forEach(k=>{ if(k.indexOf(dk+'|'+mapel+'|')===0) dst.delete(k); }); saveDirty(dst); }
           else sheetsAgain = true;
         }
         for(const d of [...sheetsPending().delRecs]){
@@ -715,7 +755,7 @@ window.QRCode = (function(){
     const delSet = new Set(p.delRecs.map(d=>d.dk+'|'+d.mapel+'|'+d.id));
     (rp.data.records||[]).forEach(r=>{
       const dk = r.dateKey, mapel = r.mapel||'HARIAN', id = String(r.id);
-      if(pendingDays.has(dk+'|'+mapel) || delSet.has(dk+'|'+mapel+'|'+id)) return;
+      if(delSet.has(dk+'|'+mapel+'|'+id) || dirtySet().has(dk+'|'+mapel+'|'+id)) return;
       const list = presensiByDate[dk] = presensiByDate[dk]||[];
       const cur = list.find(t=>t.id===id && mp(t)===mapel);
       const nv = {id, mapel, nama:r.nama||'', kelas:r.kelas||'', time:r.time||'-', status:r.status, ket:r.ket||'', oleh:r.oleh||''};
@@ -770,6 +810,7 @@ window.QRCode = (function(){
     rebuildPresensiFromByDate();
     save();
     dbSavePresensiDay(dateKey, dayRecords);
+    markDirty(dateKey, curMapel, id);
     sheetsQueueDay(dateKey, curMapel);
     return {...rec, dateKey};
   }
@@ -815,9 +856,11 @@ window.QRCode = (function(){
     return c;
   }
 
+  var docKelas = ''; // kelas aktif untuk dokumen Guru Kelas
   function filteredHistory(){
     const month = $('#riwayatFilter').value; // "YYYY-MM"
     let rows = presensi.filter(r=>mp(r)===curMapel);
+    if(curMapel==='HARIAN' && docKelas) rows = rows.filter(r=>String(r.kelas||'')===String(docKelas));
     if(month) rows = rows.filter(r=>r.dateKey.startsWith(month));
     return rows.sort((a,b)=> b.dateKey.localeCompare(a.dateKey) || String(b.time).localeCompare(String(a.time)));
   }
@@ -862,6 +905,7 @@ window.QRCode = (function(){
   }
 
   function renderHistory(){
+    try{ buildGuruPilih(); }catch(e){}
     const rows = filteredHistory();
     $('#historyBody').innerHTML = rows.map(historyRowHtml).join('');
     const c = countStatus(rows);
@@ -1360,7 +1404,7 @@ window.QRCode = (function(){
   // CSS dipakai baik untuk jendela cetak (printHtml) maupun untuk
   // merender PDF secara langsung (downloadPdf).
   const PRINT_CSS = `
-      @page{ size: landscape; margin: 12mm; }
+      @page{ size: A4 landscape; margin: 12mm; }
       body{ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#000; margin:0; padding:0 4px; background:#fff; }
       h2{ font-family:inherit; margin-bottom:2px; }
       table{ width:100%; border-collapse:collapse; }
@@ -1379,6 +1423,8 @@ window.QRCode = (function(){
       .barcodeCard .bcName{ font-weight:700; font-size:.85rem; }
       .barcodeCard .bcMeta{ font-size:.72rem; color:#333; }
       .sig .name{ font-weight:700; text-decoration:underline; }
+      thead{ display:table-header-group; }
+      tr{ page-break-inside:avoid; }
   `;
 
   // Print helper: opens the printable content in a fresh window/tab and
@@ -1407,7 +1453,7 @@ window.QRCode = (function(){
         const pxPerMm = 96/25.4;
         const pageAvailH = (210 - 24) * pxPerMm; // A4 lanskap: tinggi 210mm dikurangi margin 12mm x2
         const contentH = wrap.scrollHeight;
-        if(contentH > pageAvailH){
+        if(contentH > pageAvailH && pageAvailH / contentH >= 0.8){
           const scale = pageAvailH / contentH;
           wrap.style.transformOrigin = 'top left';
           wrap.style.transform = `scale(${scale})`;
@@ -1451,22 +1497,71 @@ window.QRCode = (function(){
       iframe.style.height = Math.max(body.scrollHeight, 10) + 'px';
 
       const canvas = await html2canvas(body, {scale:2, backgroundColor:'#ffffff', windowWidth:1200});
-      const imgData = canvas.toDataURL('image/png');
       const { jsPDF } = window.jspdf;
 
-      // Selalu dijadikan SATU halaman: lebar kertas mengikuti lebar kertas
-      // A4 lanskap, tapi TINGGI halaman menyesuaikan panjang konten (tabel
-      // rekap yang banyak baris/kolom) alih-alih memotongnya ke halaman
-      // berikutnya seperti perilaku bawaan dialog cetak/print pada umumnya.
-      const marginPt = 24;
-      const pageWidthPt = 841.89; // lebar kertas A4 posisi lanskap
-      const contentWidthPt = pageWidthPt - marginPt*2;
-      const ratio = canvas.height / canvas.width;
-      const contentHeightPt = contentWidthPt * ratio;
-      const pageHeightPt = contentHeightPt + marginPt*2;
-      const orientation = pageHeightPt >= pageWidthPt ? 'portrait' : 'landscape';
-      const pdf = new jsPDF({orientation, unit:'pt', format:[pageWidthPt, pageHeightPt]});
-      pdf.addImage(imgData, 'PNG', marginPt, marginPt, contentWidthPt, contentHeightPt);
+      // Kertas A4 LANDSCAPE. Dokumen yang pendek muat di satu halaman; dokumen yang
+      // panjang (banyak murid) dipotong di batas baris ke halaman berikutnya, dan
+      // baris judul tabel diulang di setiap halaman lanjutan.
+      const pdf = new jsPDF({orientation:'landscape', unit:'pt', format:'a4'});
+      const pageW = pdf.internal.pageSize.getWidth(), pageH = pdf.internal.pageSize.getHeight();
+      const marginPt = 24, footPt = 14;
+      const contentWpt = pageW - marginPt*2;
+      const bodyBox = body.getBoundingClientRect();
+      const sf = canvas.width / bodyBox.width;            // piksel kanvas per piksel CSS
+      const k = contentWpt / bodyBox.width;                // pt per piksel CSS
+      const totalH = canvas.height / sf;                   // tinggi isi (piksel CSS)
+      const pageAvail = (pageH - marginPt*2 - footPt) / k; // tinggi isi per halaman (piksel CSS)
+      const scrollY0 = (doc.defaultView && doc.defaultView.pageYOffset) || 0;
+      const relTop = el => el.getBoundingClientRect().top + scrollY0;
+
+      const thead = doc.querySelector('table thead');
+      const table = thead ? thead.closest('table') : null;
+      const theadTop = thead ? relTop(thead) : 0;
+      const theadH = thead ? thead.getBoundingClientRect().height : 0;
+      const tableBottom = table ? relTop(table) + table.getBoundingClientRect().height : 0;
+      const cands = [...doc.querySelectorAll('tbody tr, tfoot tr, .barcodeCard, .sig, #rkChartPrint, #rkPctPrint, .rekapHead + table')]
+        .map(relTop).filter(t=>t>1);
+
+      const pages = [];
+      if(totalH <= pageAvail*1.12){
+        pages.push({y:0, end:totalH, repeat:false}); // satu halaman (diperkecil sedikit bila perlu)
+      } else {
+        let y = 0;
+        while(y < totalH - 0.5){
+          const repeat = pages.length>0 && !!thead && y > theadTop + theadH - 1 && y < tableBottom;
+          const avail = pageAvail - (repeat ? theadH : 0);
+          let end = y + avail;
+          if(end >= totalH){ end = totalH; }
+          else{
+            const c = cands.filter(t=> t > y + avail*0.3 && t <= end + 0.5);
+            if(c.length) end = Math.max.apply(null, c) - 1; // -1px: jangan ikut garis atas baris berikutnya
+          }
+          if(end <= y + 1) end = Math.min(totalH, y + avail); // jaga-jaga agar selalu maju
+          pages.push({y, end, repeat});
+          y = end;
+        }
+      }
+
+      pages.forEach((pg, i)=>{
+        if(i>0) pdf.addPage('a4', 'landscape');
+        const sliceH = pg.end - pg.y;
+        const hdr = pg.repeat ? theadH : 0;
+        const c = document.createElement('canvas');
+        c.width = canvas.width;
+        c.height = Math.max(1, Math.round((sliceH + hdr) * sf));
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+        if(hdr) ctx.drawImage(canvas, 0, Math.round(theadTop*sf), canvas.width, Math.round(theadH*sf), 0, 0, canvas.width, Math.round(theadH*sf));
+        ctx.drawImage(canvas, 0, Math.round(pg.y*sf), canvas.width, Math.round(sliceH*sf), 0, Math.round(hdr*sf), canvas.width, Math.round(sliceH*sf));
+        let w = contentWpt, h = (sliceH + hdr) * k;
+        const maxH = pageH - marginPt*2 - footPt;
+        if(h > maxH){ const f = maxH / h; w *= f; h = maxH; }   // hanya untuk selisih kecil
+        pdf.addImage(c.toDataURL('image/png'), 'PNG', marginPt + (contentWpt - w)/2, marginPt, w, h);
+        if(pages.length > 1){
+          pdf.setFontSize(8); pdf.setTextColor(110);
+          pdf.text('Halaman '+(i+1)+' dari '+pages.length, pageW/2, pageH - 12, {align:'center'});
+        }
+      });
 
       const blob = pdf.output('blob');
       if(await offerDownload(filename, blob)) return true;
@@ -1483,10 +1578,11 @@ window.QRCode = (function(){
 
   // Print / PDF (landscape) - Riwayat
   $('#printBtn').addEventListener('click', async ()=>{
+    await refreshBeforePrint();
     const rows = filteredHistory();
     $('#printBody').innerHTML = rows.map(historyRowHtml).join('');
     $('#printFoot').innerHTML = rows.length ? footRowHtml(countStatus(rows)) : '';
-    $('#printMeta').textContent = 'Dicetak pada '+todayStr()+' · Total '+rows.length+' entri';
+    $('#printMeta').textContent = guruLabel()+' · Dicetak pada '+todayStr()+' · Total '+rows.length+' entri';
     const btn = $('#printBtn'); btn.disabled = true;
     try{
       const ok = await downloadPdf('riwayat-presensi.pdf', 'Rekap Presensi Siswa', document.getElementById('printArea'));
@@ -1502,7 +1598,26 @@ window.QRCode = (function(){
   // selalu jadi nilai yang tersimpan. Hanya Tanggal Pengesahan yang sengaja
   // TIDAK disimpan, karena itu memang seharusnya mengikuti tanggal saat ini.
   const REKAP_SETTINGS_KEY = 'presensi_rekap_settings';
-  function saveGuru(){ try{ localStorage.setItem('presensi_guru_'+curMapel, JSON.stringify({n:$('#rkNamaGuru').value,s:$('#rkStatusGuru').value,no:$('#rkNomorGuru').value})); }catch(e){} }
+  // Data guru (nama, status, nomor) diingat PER KELAS, supaya satu perangkat bisa dipakai
+  // mencetak rekap untuk beberapa wali kelas tanpa mengetik ulang nama guru tiap kali.
+  const guruStoreKey = (mapel, kelas) => 'presensi_guru_'+mapel+(mapel==='HARIAN' && kelas ? '__'+kelas : '');
+  function readGuru(mapel, kelas){ try{ return JSON.parse(localStorage.getItem(guruStoreKey(mapel, kelas))||'null'); }catch(e){ return null; } }
+  let guruKelasKey = ''; // kelas yang datanya sedang tampil di isian guru
+  function saveGuru(){ try{ localStorage.setItem(guruStoreKey(curMapel, guruKelasKey), JSON.stringify({n:$('#rkNamaGuru').value,s:$('#rkStatusGuru').value,no:$('#rkNomorGuru').value})); }catch(e){} }
+  function applyGuruForKelas(){
+    const kelas = $('#rkKelas').value;
+    guruKelasKey = kelas;
+    let g = readGuru(curMapel, kelas);
+    if(!g && kelas){
+      // Migrasi: pakai data guru lama hanya bila belum ada data guru per kelas sama sekali.
+      const anyPerKelas = Object.keys(localStorage).some(k=> k.indexOf('presensi_guru_'+curMapel+'__')===0);
+      if(!anyPerKelas) g = readGuru(curMapel, '');
+    }
+    g = g || {};
+    $('#rkNamaGuru').value = g.n || '';
+    $('#rkNomorGuru').value = g.no || '';
+    if(g.s) $('#rkStatusGuru').value = g.s;
+  }
   function loadRekapSettings(){
     try{ return JSON.parse(localStorage.getItem(REKAP_SETTINGS_KEY) || 'null') || {}; }
     catch(e){ return {}; }
@@ -1568,7 +1683,7 @@ window.QRCode = (function(){
     if(!$('#rkTanggal').value){ $('#rkTanggal').value = dateKey(new Date()); $('#rkTanggal').dataset.auto = '1'; }
     const kelasSel = $('#rkKelas');
     const prevVal = kelasSel.value;
-    const kelasList = [...new Set(students.map(s=>s.kelas).filter(Boolean))];
+    const kelasList = kelasListSorted();
     kelasSel.innerHTML = `<option value="">Semua Kelas</option>` + kelasList.map(k=>`<option value="${escapeHtml(k)}">${escapeHtml(formatKelasLabel(k))}</option>`).join('');
     // Pertahankan kelas yang sudah dipilih guru sebelumnya dalam sesi ini.
     // Kalau belum pernah memilih di sesi ini, pakai kelas yang tersimpan dari
@@ -1587,8 +1702,10 @@ window.QRCode = (function(){
     // sedang diketik pengguna saat berpindah tab di sesi yang sama.
     if(!rekapSettingsLoaded){
       applyRekapSettings(saved);
+      applyGuruForKelas();
       rekapSettingsLoaded = true;
     }
+    buildGuruPilih();
   }
 
   // Simpan otomatis setiap kali salah satu field profil ini diubah, supaya
@@ -1602,13 +1719,83 @@ window.QRCode = (function(){
     if(el) el.addEventListener('blur', saveRekapSettings);
   });
 
+  // Didaftarkan SETELAH listener bawaan di atas, jadi data guru kelas lama sudah tersimpan
+  // (di bawah kunci kelas lama) sebelum isian diganti dengan data guru kelas yang baru dipilih.
+  $('#rkKelas').addEventListener('change', ()=>{ applyGuruForKelas(); });
+
+  // ---- Pilihan guru untuk cetak dokumen: Guru Kelas (per kelas), Guru PAIPB, Guru PJOK ----
+  const KELAS_DOC = ['1','2','3','4','5','6'];
+  var docInit = false;
+  function kelasListSorted(){
+    return [...new Set(students.map(s=>String(s.kelas)).filter(Boolean).concat(KELAS_DOC))].sort((a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true}));
+  }
+  function guruLabel(){
+    if(curMapel==='HARIAN') return docKelas ? 'Guru Kelas '+formatKelasLabel(docKelas) : 'Semua Kelas';
+    return 'Guru '+curMapel;
+  }
+  function buildGuruPilih(){
+    const kl = kelasListSorted();
+    if(!docInit){
+      docInit = true;
+      const saved = loadRekapSettings().kelas;
+      docKelas = KELAS_DOC.includes(saved) ? saved : '';
+    }
+    let html = `<option value="HARIAN|">Semua Kelas</option>`
+      + KELAS_DOC.map(k=>`<option value="HARIAN|${k}">Guru Kelas ${k}</option>`).join('')
+      + `<option value="PAIPB">Guru PAIPB</option><option value="PJOK">Guru PJOK</option>`;
+    const val = curMapel==='HARIAN' ? 'HARIAN|'+docKelas : curMapel;
+    ['#rkGuruPilih','#rwGuruPilih'].forEach(id=>{ const el=$(id); if(el){ el.innerHTML = html; el.value = val; } });
+    // Guru Kelas: kelas ditentukan oleh pilihan guru. PAIPB/PJOK: boleh pilih kelas / semua kelas.
+    const kSel = $('#rkKelas'), kField = kSel.closest('.field');
+    const optSig = a => a.join('|');
+    if(optSig([...kSel.options].map(o=>o.value).filter(Boolean)) !== optSig(kl)){
+      const keep = kSel.value;
+      kSel.innerHTML = `<option value="">Semua Kelas</option>` + kl.map(k=>`<option value="${escapeHtml(k)}">${escapeHtml(formatKelasLabel(k))}</option>`).join('');
+      if(kl.includes(keep)) kSel.value = keep;
+    }
+    if(curMapel==='HARIAN'){
+      if(kSel.value !== docKelas && [...kSel.options].some(o=>o.value===docKelas)){
+        if(rekapSettingsLoaded) saveGuru();
+        kSel.value = docKelas;
+        if(rekapSettingsLoaded) applyGuruForKelas();
+      }
+      if(kField) kField.style.display = 'none';
+    } else if(kField) kField.style.display = '';
+    $('#rekapHeading').textContent = 'Cetak Rekapitulasi Bulanan — ' + (curMapel==='HARIAN' ? guruLabel() : 'Guru '+curMapel);
+  }
+  function pilihGuru(val){
+    const [m, k] = String(val).split('|');
+    if(rekapSettingsLoaded) saveGuru();          // simpan data guru yang sedang tampil
+    if(m==='HARIAN'){ docKelas = k || ''; }
+    if(m !== curMapel){
+      $('#mapelSel').value = m;
+      $('#mapelSel').dispatchEvent(new Event('change')); // ganti mapel + muat ulang tampilan
+    }
+    if(m==='HARIAN'){
+      const kSel = $('#rkKelas');
+      if([...kSel.options].some(o=>o.value===docKelas)) kSel.value = docKelas;
+    }
+    applyGuruForKelas();
+    buildGuruPilih();
+    renderHistory();
+    if($('#view-rekap').classList.contains('active')) renderRekapForm();
+    saveRekapSettings();
+    flash('Dokumen untuk: '+guruLabel(), 'ok');
+  }
+  ['#rkGuruPilih','#rwGuruPilih'].forEach(id=>{ $(id).addEventListener('change', e=>pilihGuru(e.target.value)); });
+
+
   $('#saveRekapSettingsBtn').addEventListener('click', ()=>{
     saveRekapSettings();
     flash('Data guru & kepala sekolah tersimpan. Tidak akan kembali kosong lagi.', 'ok');
   });
 
+  async function refreshBeforePrint(){
+    try{ if(sheetsCfg().url){ flash('Mengambil data terbaru dari Google Sheets…','warn'); await sheetsFlush(); await sheetsPull(); } }catch(e){}
+  }
   $('#printRekapBtn').addEventListener('click', async ()=>{
     saveRekapSettings();
+    await refreshBeforePrint();
     const bulan = $('#rkBulan').value; // YYYY-MM
     if(!bulan){ alert('Pilih bulan presensi.'); return; }
     const [yy, mm] = bulan.split('-');
@@ -1677,7 +1864,7 @@ window.QRCode = (function(){
 
     const statusGuru = $('#rkStatusGuru').value;
     const nomorGuru = $('#rkNomorGuru').value.trim() || '-';
-    $('#rkSigRole').textContent = curMapel==='HARIAN' ? 'Guru Kelas' : 'Guru '+curMapel;
+    $('#rkSigRole').textContent = curMapel==='HARIAN' ? (kelas ? 'Guru Kelas '+formatKelasLabel(kelas) : 'Guru Kelas') : 'Guru '+curMapel;
     $('#rkSigGuruName').textContent = $('#rkNamaGuru').value.trim() || '-';
     $('#rkSigGuruNip').textContent = `${statusGuru}. ${nomorGuru}`;
     $('#rkSigKepsekName').textContent = $('#rkNamaKepsek').value.trim() || '-';
@@ -1720,12 +1907,11 @@ window.QRCode = (function(){
   $('#mapelSel').addEventListener('change', ()=>{
     saveRekapSettings();
     curMapel = $('#mapelSel').value;
-    let g={}; try{ g=JSON.parse(localStorage.getItem('presensi_guru_'+curMapel)||'{}'); }catch(e){}
-    $('#rkNamaGuru').value=g.n||''; $('#rkNomorGuru').value=g.no||''; if(g.s) $('#rkStatusGuru').value=g.s;
+    applyGuruForKelas();
     renderToday(); renderHistory();
     if($('#view-catatan').classList.contains('active')) renderCatatan();
     if($('#view-rekap').classList.contains('active')) renderRekapForm();
-    $('#rekapHeading').textContent='Cetak Rekapitulasi Bulanan — '+(curMapel==='HARIAN'?'Harian (Guru Kelas)':'Guru '+curMapel);
+    buildGuruPilih();
     $('#rkNamaGuru').placeholder=curMapel==='HARIAN'?'Nama guru kelas':'Nama guru '+curMapel;
     flash('Presensi untuk: '+(curMapel==='HARIAN'?'Harian (Guru Kelas)':curMapel),'ok');
   });
