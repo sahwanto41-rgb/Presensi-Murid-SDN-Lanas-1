@@ -564,10 +564,13 @@ window.QRCode = (function(){
   // Pengaturan bawaan: berlaku di semua perangkat tanpa perlu diisi ulang.
   // Isian manual di kartu "Simpan ke Google Sheets" tetap diutamakan bila ada.
   const SHEETS_DEFAULT = {
-    url: 'https://script.google.com/macros/s/AKfycbywL3D7xxeRz-UqXrvWh-GCjqFoKIU1_c4bFii3UBuSRQrMWxb7UmhE_JcbsVOcF0tpYg/exec',
+    url: 'https://script.google.com/macros/s/AKfycbwOEzClk7BB6T9tMe32acjUKI1-XyZZO88eYZpaeA1gbPIng0R3jFR3fwox8YsAOkF6AA/exec',
     token: 'Lanas01@2023'
   };
-  const SHEETS_LEGACY_URLS = ['https://script.google.com/macros/s/AKfycby_WHJ_O-HMkEukdXpOofadRd_Ghr1xqKKm0F7bYXw41A6aDW6pK4qmWqYaiJdiaPkq9w/exec'];
+  const SHEETS_LEGACY_URLS = [
+    'https://script.google.com/macros/s/AKfycby_WHJ_O-HMkEukdXpOofadRd_Ghr1xqKKm0F7bYXw41A6aDW6pK4qmWqYaiJdiaPkq9w/exec',
+    'https://script.google.com/macros/s/AKfycbywL3D7xxeRz-UqXrvWh-GCjqFoKIU1_c4bFii3UBuSRQrMWxb7UmhE_JcbsVOcF0tpYg/exec'
+  ];
   function sheetsCfg(){
     let c = {};
     try{ c = JSON.parse(localStorage.getItem(SHEETS_CFG_KEY)||'{}')||{}; }catch(e){}
