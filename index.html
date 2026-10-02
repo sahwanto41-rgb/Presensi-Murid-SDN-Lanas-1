@@ -394,6 +394,10 @@ window.QRCode = (function(){
           <input type="date" id="rkTanggal">
         </div>
       </div>
+      <label class="hint" style="display:flex; gap:8px; align-items:flex-start; margin:2px 0 10px">
+        <input type="checkbox" id="rkAutoAlpa" checked style="width:auto; flex:none; margin-top:3px">
+        <span>Siswa yang tidak scan dan tidak dicatat Ijin/Sakit pada hari ketika ada presensi dihitung <b>Alpa (A)</b>. Hari tanpa satu pun presensi (libur/Sabtu-Minggu) dibiarkan kosong.</span>
+      </label>
       <div class="actions" style="margin-top:4px">
         <button class="btn ghost" id="saveRekapSettingsBtn" type="button">💾 Simpan Data Guru &amp; Kepsek</button>
         <button class="btn" id="printRekapBtn">Cetak Rekapitulasi Bulanan</button>
@@ -1709,6 +1713,7 @@ window.QRCode = (function(){
       rekapSettingsLoaded = true;
     }
     buildGuruPilih();
+    try{ buildRekap(true); }catch(e){}
   }
 
   // Simpan otomatis setiap kali salah satu field profil ini diubah, supaya
@@ -1724,7 +1729,8 @@ window.QRCode = (function(){
 
   // Didaftarkan SETELAH listener bawaan di atas, jadi data guru kelas lama sudah tersimpan
   // (di bawah kunci kelas lama) sebelum isian diganti dengan data guru kelas yang baru dipilih.
-  $('#rkKelas').addEventListener('change', ()=>{ applyGuruForKelas(); });
+  $('#rkKelas').addEventListener('change', ()=>{ applyGuruForKelas(); try{ buildRekap(true); }catch(e){} });
+  ['rkBulan','rkAutoAlpa'].forEach(id=>{ const el = document.getElementById(id); if(el) el.addEventListener('change', ()=>{ try{ buildRekap(true); }catch(e){} }); });
 
   // ---- Pilihan guru untuk cetak dokumen: Guru Kelas (per kelas), Guru PAIPB, Guru PJOK ----
   const KELAS_DOC = ['1','2','3','4','5','6'];
@@ -1796,11 +1802,9 @@ window.QRCode = (function(){
   async function refreshBeforePrint(){
     try{ if(sheetsCfg().url){ flash('Mengambil data terbaru dari Google Sheets…','warn'); await sheetsFlush(); await sheetsPull(); } }catch(e){}
   }
-  $('#printRekapBtn').addEventListener('click', async ()=>{
-    saveRekapSettings();
-    await refreshBeforePrint();
+  function buildRekap(quiet){
     const bulan = $('#rkBulan').value; // YYYY-MM
-    if(!bulan){ alert('Pilih bulan presensi.'); return; }
+    if(!bulan){ if(!quiet) alert('Pilih bulan presensi.'); return false; }
     const [yy, mm] = bulan.split('-');
     const namaBulan = BULAN_ID[parseInt(mm,10)-1];
     const kelas = $('#rkKelas').value;
@@ -1808,6 +1812,7 @@ window.QRCode = (function(){
     const tahunAjaran = taSel.value==='__manual' ? ($('#rkTahunAjaranManual').value.trim()||'-') : taSel.value;
 
     const list = students.filter(s=> !kelas || s.kelas===kelas);
+    const autoAlpa = !$('#rkAutoAlpa') || $('#rkAutoAlpa').checked;
     const recs = presensi.filter(r=>r.dateKey.startsWith(bulan) && mp(r)===curMapel);
     const daysInMonth = new Date(parseInt(yy,10), parseInt(mm,10), 0).getDate();
     const pad2 = n => String(n).padStart(2,'0');
@@ -1825,18 +1830,26 @@ window.QRCode = (function(){
 
     let totH=0, totI=0, totS=0, totA=0;
     const dayTally = {}; // Hadir per day
+    // Hari "ada presensi" per kelas = hari ketika minimal satu siswa kelas itu tercatat
+    // (hasil scan Hadir atau catatan Ijin/Sakit/Alpa). Dipakai untuk menentukan Alpa otomatis.
+    const kelasOf = {}; list.forEach(x=>{ kelasOf[x.id] = x.kelas || ''; });
+    const effByKelas = {};
+    recs.forEach(r=>{ if(r.id in kelasOf){ (effByKelas[kelasOf[r.id]] = effByKelas[kelasOf[r.id]] || new Set()).add(r.dateKey); } });
     const body = list.map((s,i)=>{
       const own = recs.filter(r=>r.id===s.id);
-      const c = countStatus(own);
-      totH+=c.H; totI+=c.I; totS+=c.S; totA+=c.A;
-      const p = attendancePct(c);
+      const c = {H:0,I:0,S:0,A:0};
       let dayCells = '';
       for(const d of dayList){
         const dk = `${yy}-${mm}-${pad2(d)}`;
         const rec = own.find(r=>r.dateKey===dk);
-        dayTally[d]=(dayTally[d]||0)+((rec && rec.status==='H')?1:0);
-        dayCells += `<td class="day">${rec ? rec.status : ''}</td>`;
+        let st = rec ? rec.status : '';
+        if(!st && autoAlpa && effByKelas[s.kelas||''] && effByKelas[s.kelas||''].has(dk)) st = 'A';
+        if(c[st] !== undefined) c[st]++;
+        dayTally[d] = (dayTally[d]||0) + (st==='H' ? 1 : 0);
+        dayCells += `<td class="day">${st}</td>`;
       }
+      totH+=c.H; totI+=c.I; totS+=c.S; totA+=c.A;
+      const p = attendancePct(c);
       return `<tr><td class="no">${i+1}</td><td class="name">${escapeHtml(s.nama)}</td>${dayCells}<td class="tot">${c.H}</td><td class="tot">${c.I}</td><td class="tot">${c.S}</td><td class="tot">${c.A}</td><td class="tot">${p.pct}%</td></tr>`;
     }).join('');
     $('#rkBody').innerHTML = body || `<tr><td colspan="${dayList.length+7}" style="text-align:center">Tidak ada siswa pada kelas ini.</td></tr>`;
@@ -1868,13 +1881,19 @@ window.QRCode = (function(){
     const statusGuru = $('#rkStatusGuru').value;
     const nomorGuru = $('#rkNomorGuru').value.trim() || '-';
     $('#rkSigRole').textContent = curMapel==='HARIAN' ? (kelas ? 'Guru Kelas '+formatKelasLabel(kelas) : 'Guru Kelas') : 'Guru '+curMapel;
-    $('#rkSigGuruName').textContent = $('#rkNamaGuru').value.trim() || '-';
-    $('#rkSigGuruNip').textContent = `${statusGuru}. ${nomorGuru}`;
-    $('#rkSigKepsekName').textContent = $('#rkNamaKepsek').value.trim() || '-';
-    $('#rkSigKepsekNip').textContent = `NIP. ${$('#rkNipKepsek').value.trim() || '-'}`;
+    $('#rkSigGuruName').textContent = $('#rkNamaGuru').value.trim();
+    $('#rkSigGuruNip').textContent = $('#rkNomorGuru').value.trim() ? `${statusGuru}. ${nomorGuru}` : '';
+    $('#rkSigKepsekName').textContent = $('#rkNamaKepsek').value.trim();
+    $('#rkSigKepsekNip').textContent = $('#rkNipKepsek').value.trim() ? `NIP. ${$('#rkNipKepsek').value.trim()}` : '';
     const tgl = $('#rkTanggal').value ? new Date($('#rkTanggal').value+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
     $('#rkSigPlace').textContent = `${$('#rkTempat').value.trim()||'-'}, ${tgl}`;
+    return true;
 
+  }
+  $('#printRekapBtn').addEventListener('click', async ()=>{
+    saveRekapSettings();
+    await refreshBeforePrint();
+    if(!buildRekap(false)) return;
     $('#printRekapBtn').disabled = true;
     try{
       const ok = await downloadPdf('rekapitulasi-bulanan.pdf', 'Rekapitulasi Presensi Bulanan', document.getElementById('printAreaRekap'));
