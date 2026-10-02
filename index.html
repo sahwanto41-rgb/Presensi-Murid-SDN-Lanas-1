@@ -556,12 +556,16 @@ window.QRCode = (function(){
   // Pengaturan bawaan: berlaku di semua perangkat tanpa perlu diisi ulang.
   // Isian manual di kartu "Simpan ke Google Sheets" tetap diutamakan bila ada.
   const SHEETS_DEFAULT = {
-    url: 'https://script.google.com/macros/s/AKfycby_WHJ_O-HMkEukdXpOofadRd_Ghr1xqKKm0F7bYXw41A6aDW6pK4qmWqYaiJdiaPkq9w/exec',
+    url: 'https://script.google.com/macros/s/AKfycbywL3D7xxeRz-UqXrvWh-GCjqFoKIU1_c4bFii3UBuSRQrMWxb7UmhE_JcbsVOcF0tpYg/exec',
     token: 'Lanas01@2023'
   };
+  const SHEETS_LEGACY_URLS = ['https://script.google.com/macros/s/AKfycby_WHJ_O-HMkEukdXpOofadRd_Ghr1xqKKm0F7bYXw41A6aDW6pK4qmWqYaiJdiaPkq9w/exec'];
   function sheetsCfg(){
     let c = {};
     try{ c = JSON.parse(localStorage.getItem(SHEETS_CFG_KEY)||'{}')||{}; }catch(e){}
+    // Alamat lama (deployment sebelumnya) otomatis diganti ke alamat bawaan yang baru,
+    // termasuk di perangkat yang sempat menyimpan alamat lama secara manual.
+    if(c.url && SHEETS_LEGACY_URLS.includes(c.url)) return SHEETS_DEFAULT;
     return (c.url || c.off) ? c : SHEETS_DEFAULT;
   }
   function sheetsPending(){
@@ -583,11 +587,18 @@ window.QRCode = (function(){
     try{
       const r = await fetch(cfg.url, {method:'POST', headers, body});
       const j = await r.json();
-      return {ok: !!j.ok, msg: j.error||''};
+      if(j.ok && !(j.version>=3)) warnOldScript();
+      return {ok: !!j.ok, msg: j.error||'', version: j.version};
     }catch(e){
       try{ await fetch(cfg.url, {method:'POST', mode:'no-cors', headers, body}); return {ok:true, opaque:true}; }
       catch(e2){ return {ok:false, msg:'offline'}; }
     }
+  }
+  const OLD_SCRIPT_MSG = 'Skrip Google Apps Script masih versi lama, sehingga presensi dari perangkat lain bisa tertimpa atau tidak muncul. Perbarui: Apps Script → Deploy → Manage deployments → Edit → New version → Deploy.';
+  let oldScriptWarned = false;
+  function warnOldScript(){
+    setShStatus('⚠ '+OLD_SCRIPT_MSG);
+    if(!oldScriptWarned){ oldScriptWarned = true; flash(OLD_SCRIPT_MSG, 'err'); }
   }
   async function sheetsGet(params){
     const cfg = sheetsCfg();
@@ -685,6 +696,7 @@ window.QRCode = (function(){
   async function doSheetsPull(){
     const rs = await sheetsGet({action:'students'});
     if(!rs.ok) return rs;
+    if(!Array.isArray(rs.data.students) || !(rs.data.version>=3)){ warnOldScript(); return {ok:false, msg:'skrip versi lama'}; }
     const from = dateKey(new Date(Date.now()-120*86400000));
     const rp = await sheetsGet({action:'presensi', from});
     if(!rp.ok) return rp;
@@ -735,8 +747,8 @@ window.QRCode = (function(){
     const r = await sheetsPull();
     if(r.ok){ setShStatus('Tersinkron dengan Google Sheets pukul '+new Date().toLocaleTimeString('id-ID')+' ✔'); if(manual) flash(r.changed?'Data terbaru dari Google Sheets dimuat.':'Data sudah yang terbaru.', 'ok'); }
     else{
-      setShStatus('Gagal mengambil data ('+(r.msg||'gagal')+').');
-      if(manual && r.msg!=='offline') flash('Google Sheets: '+r.msg, 'err');
+      if(r.msg!=='skrip versi lama') setShStatus('Gagal mengambil data ('+(r.msg||'gagal')+').');
+      if(manual && r.msg!=='offline' && r.msg!=='skrip versi lama') flash('Google Sheets: '+r.msg, 'err');
       else if(manual) flash('Tidak ada koneksi internet.', 'warn');
     }
   }
@@ -1350,7 +1362,7 @@ window.QRCode = (function(){
   const PRINT_CSS = `
       @page{ size: landscape; margin: 12mm; }
       body{ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#000; margin:0; padding:0 4px; background:#fff; }
-      h2{ font-family:"Space Grotesk",sans-serif; margin-bottom:2px; }
+      h2{ font-family:inherit; margin-bottom:2px; }
       table{ width:100%; border-collapse:collapse; }
       th,td{ border:1px solid #999; padding:6px 8px; font-size:.85rem; }
       #rkTable th,#rkTable td{ padding:3px 2px; font-size:.68rem; text-align:center; }
@@ -1656,7 +1668,8 @@ window.QRCode = (function(){
     }
     const summaryText = list.length ? `Persentase kehadiran kelas: ${classPct.pct}% (dari ${classPct.total} entri tercatat)` : 'Belum ada data untuk dihitung.';
     const summaryChart = list.length ? barChartSVG(classCounts) : '';
-    $('#rekapPct').textContent = summaryText;
+    const otherMapel = presensi.filter(r=>r.dateKey.startsWith(bulan) && mp(r)!==curMapel).length;
+    $('#rekapPct').textContent = summaryText + (otherMapel ? ` — ada ${otherMapel} entri mapel lain bulan ini yang tidak dihitung di rekap ini (ganti pilihan Mapel di tab Scan).` : '');
     $('#rekapChart').innerHTML = summaryChart;
     $('#rekapPreview').style.display = 'block';
     $('#rkPctPrint').textContent = summaryText;
@@ -1751,7 +1764,7 @@ window.QRCode = (function(){
       if(!sheetsCfg().url){ flash('Simpan alamat Web App terlebih dahulu.', 'warn'); return; }
       setShStatus('Menguji koneksi…');
       const res = await sheetsPost({action:'ping'});
-      if(res.ok && !res.opaque){ setShStatus('Koneksi berhasil ✔'); flash('Terhubung ke Google Sheets.', 'ok'); }
+      if(res.ok && !res.opaque){ if(res.version>=3){ setShStatus('Koneksi berhasil ✔ (skrip versi terbaru)'); flash('Terhubung ke Google Sheets.', 'ok'); } else warnOldScript(); }
       else if(res.ok){ setShStatus('Permintaan terkirim, tetapi balasan tidak bisa dibaca browser. Kirim data lalu cek Sheet-nya.'); flash('Terkirim — cek Google Sheets Anda.', 'warn'); }
       else { setShStatus('Gagal: '+(res.msg||'tidak diketahui')); flash('Gagal terhubung: '+(res.msg||'periksa alamat & koneksi'), 'err'); }
     });
